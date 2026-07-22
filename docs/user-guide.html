@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apartment Investment Analyzer — User Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #eef2ff;
+    --bg-2: #f7f9ff;
+    --card: rgba(255, 255, 255, 0.85);
+    --card-solid: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: rgba(15, 23, 42, 0.08);
+    --brand: #4f46e5;
+    --brand-2: #7c3aed;
+    --brand-soft: #eef2ff;
+    --sky: #0ea5e9;
+    --good: #059669;
+    --good-bg: #d1fae5;
+    --good-line: #6ee7b7;
+    --bad: #e11d48;
+    --bad-bg: #ffe4e6;
+    --bad-line: #fda4af;
+    --warn: #d97706;
+    --warn-bg: #fef3c7;
+    --warn-line: #fcd34d;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow: 0 8px 24px -12px rgba(30, 41, 59, 0.18);
+    --shadow-lg: 0 20px 45px -20px rgba(30, 41, 59, 0.28);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #dbeafe 0%, transparent 55%),
+      radial-gradient(1000px 500px at 110% 0%, #ede9fe 0%, transparent 50%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  ::selection { background: rgba(124, 58, 237, 0.18); }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 22px 80px; }
+
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- top nav ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(247, 249, 255, 0.72);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1080px; margin: 0 auto; padding: 12px 22px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .brandmark { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.01em; }
+  .brandmark .logo {
+    width: 30px; height: 30px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 55%, var(--sky) 100%);
+    display: inline-flex; align-items: center; justify-content: center; color: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .topnav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+  .topnav a {
+    color: var(--muted); font-size: 13.5px; font-weight: 600;
+    padding: 7px 11px; border-radius: 10px;
+  }
+  .topnav a:hover { background: var(--brand-soft); color: var(--brand); text-decoration: none; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 40px 0 8px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;
+    color: var(--brand); background: var(--brand-soft); border: 1px solid rgba(79,70,229,0.16);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 18px;
+  }
+  h1 {
+    margin: 0 0 12px; font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+    letter-spacing: -0.025em; line-height: 1.08;
+    background: linear-gradient(100deg, var(--brand) 0%, var(--brand-2) 55%, var(--sky) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lead { margin: 0; font-size: clamp(16px, 2vw, 19px); color: #334155; max-width: 720px; }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-weight: 700; font-size: 14.5px; border-radius: 12px; padding: 11px 18px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card-solid); color: var(--ink);
+    box-shadow: var(--shadow-sm); transition: all .15s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+    color: #fff; border-color: transparent;
+  }
+
+  /* ---------- disclaimer ---------- */
+  .callout {
+    display: flex; gap: 12px; align-items: flex-start;
+    border-radius: 14px; padding: 14px 16px; margin: 26px 0 8px;
+    font-size: 14.5px;
+  }
+  .callout .ico { flex-shrink: 0; margin-top: 1px; }
+  .callout-warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: #92400e; }
+  .callout-info { background: #e0f2fe; border: 1px solid #7dd3fc; color: #075985; }
+  .callout-good { background: var(--good-bg); border: 1px solid var(--good-line); color: #065f46; }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 48px; scroll-margin-top: 72px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .section-head .sico {
+    width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
+    background: var(--brand-soft); color: var(--brand);
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(79,70,229,0.14);
+  }
+  h2 { margin: 0; font-size: clamp(21px, 3vw, 27px); font-weight: 800; letter-spacing: -0.02em; }
+  .section-sub { color: var(--muted); margin: 2px 0 20px; font-size: 15px; }
+
+  /* ---------- cards ---------- */
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 22px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  .feature { padding: 20px; }
+  .feature .fico {
+    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+    display: inline-flex; align-items: center; justify-content: center; color: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .feature h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; }
+  .feature p { margin: 0; color: #475569; font-size: 14.5px; }
+  .tag {
+    display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .02em;
+    color: var(--brand); background: var(--brand-soft); border-radius: 999px;
+    padding: 3px 10px; margin-bottom: 12px; border: 1px solid rgba(79,70,229,0.14);
+  }
+
+  /* gradient icon tiles */
+  .g-indigo { background: linear-gradient(135deg,#4f46e5,#7c3aed); }
+  .g-violet { background: linear-gradient(135deg,#7c3aed,#a855f7); }
+  .g-sky    { background: linear-gradient(135deg,#0ea5e9,#38bdf8); }
+  .g-green  { background: linear-gradient(135deg,#059669,#10b981); }
+  .g-amber  { background: linear-gradient(135deg,#d97706,#f59e0b); }
+  .g-rose   { background: linear-gradient(135deg,#e11d48,#fb7185); }
+  .g-slate  { background: linear-gradient(135deg,#334155,#64748b); }
+  .g-teal   { background: linear-gradient(135deg,#0d9488,#2dd4bf); }
+
+  /* ---------- steps ---------- */
+  .steps { counter-reset: step; display: grid; gap: 14px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; }
+  .step .num {
+    counter-increment: step; flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px;
+  }
+  .step .num::before { content: counter(step); }
+  .step h3 { margin: 2px 0 4px; font-size: 16.5px; }
+  .step p { margin: 0; color: #475569; font-size: 14.5px; }
+
+  /* ---------- verdict chips ---------- */
+  .verdicts { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-weight: 700; font-size: 14px; padding: 9px 15px; border-radius: 999px;
+  }
+  .chip-good { background: var(--good-bg); border: 1px solid var(--good-line); color: var(--good); }
+  .chip-warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: var(--warn); }
+  .chip-bad  { background: var(--bad-bg);  border: 1px solid var(--bad-line);  color: var(--bad); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  /* ---------- glossary ---------- */
+  .terms { display: grid; gap: 0; }
+  .term { padding: 16px 4px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 200px 1fr; gap: 18px; }
+  .term:last-child { border-bottom: 0; }
+  .term dt { font-weight: 700; font-size: 15px; }
+  .term dt .de { display: block; color: var(--brand-2); font-size: 12.5px; font-weight: 600; margin-top: 2px; }
+  .term dd { margin: 0; color: #475569; font-size: 14.5px; }
+  @media (max-width: 620px) { .term { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- misc ---------- */
+  .muted { color: var(--muted); }
+  .kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
+    background: #f1f5f9; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px;
+  }
+  ul.clean { margin: 10px 0 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  ul.clean li { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; color: #475569; }
+  ul.clean li svg { flex-shrink: 0; margin-top: 2px; color: var(--good); }
+
+  footer {
+    margin-top: 60px; padding-top: 26px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 13.5px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  @media print {
+    .topbar, .hero-actions { display: none; }
+    body { background: #fff; }
+    .card, .feature, .step { box-shadow: none; break-inside: avoid; }
+    section { break-inside: avoid-page; }
+    a { color: var(--ink); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="brandmark">
+      <span class="logo">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      </span>
+      Investment Analyzer
+    </span>
+    <nav class="topnav">
+      <a href="#overview">Overview</a>
+      <a href="#start">Getting started</a>
+      <a href="#tabs">The tabs</a>
+      <a href="#tools">Extra tools</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <span class="eyebrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+      User Guide
+    </span>
+    <h1>Apartment Investment Analyzer</h1>
+    <p class="lead">
+      A fast, private tool that tells you whether a German rental apartment is a good
+      <strong>investment</strong>. Enter a listing's numbers and get an instant
+      buy / caution / avoid verdict, full cash-flow and financing analysis, and a
+      multi-year after-tax projection — all in plain language.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#start">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Get started
+      </a>
+      <a class="btn" href="#tabs">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        Tour the app
+      </a>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span><strong>Not financial or tax advice.</strong> This is a decision-support tool. Every figure is an estimate — verify against professional advice and current market data before making any decision.</span>
+    </div>
+  </header>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section id="overview">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+      <h2>What it does</h2>
+    </div>
+    <p class="section-sub">One screen turns a property listing into a clear, defensible investment read.</p>
+
+    <div class="grid grid-3">
+      <div class="card feature">
+        <span class="fico g-indigo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></span>
+        <h3>Instant verdict</h3>
+        <p>A Buy / Caution / Avoid score built from yield, cash flow, price vs. the local market, and location.</p>
+      </div>
+      <div class="card feature">
+        <span class="fico g-sky"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
+        <h3>Live analysis</h3>
+        <p>Yields, monthly cash flow, financing and a multi-year projection recalculate instantly as you type.</p>
+      </div>
+      <div class="card feature">
+        <span class="fico g-violet"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
+        <h3>Built for Germany</h3>
+        <p>Annuity loans, Zinsbindung + follow-up financing, AfA depreciation, Spekulationssteuer and the 10-year rule.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="tag">Who it's for</div>
+      <p style="margin:0; color:#475569; font-size:15px;">
+        Anyone weighing up a rental flat — from a first-time buyer who wants plain-language
+        guidance, to an experienced investor who wants the numbers to hold up. No spreadsheets,
+        no accounts, nothing to install.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ GETTING STARTED ============ -->
+  <section id="start">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 11 4-7"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.6-7.4"/><path d="m9 15 2 2 4-4"/></svg></span>
+      <h2>Getting started in three steps</h2>
+    </div>
+    <p class="section-sub">From a property advert to a verdict in a couple of minutes.</p>
+
+    <div class="steps">
+      <div class="card step">
+        <span class="num"></span>
+        <div>
+          <h3>Enter the listing</h3>
+          <p>Type in the purchase price, size (m²), and expected cold rent from the advert. Add the balcony area, Hausgeld (HOA fee) and build year if you have them. Every field has a small <strong>ⓘ</strong> hint explaining it in plain words.</p>
+        </div>
+      </div>
+      <div class="card step">
+        <span class="num"></span>
+        <div>
+          <h3>Set your financing</h3>
+          <p>Enter your down payment, interest rate, the fixed-interest period (Zinsbindung) and your repayment rate (Tilgung %). Pick whether to assume one rate for the whole loan, or to refinance the remainder afterwards.</p>
+        </div>
+      </div>
+      <div class="card step">
+        <span class="num"></span>
+        <div>
+          <h3>Read the verdict &amp; explore</h3>
+          <p>The banner at the top gives a Buy / Caution / Avoid call. Then browse the tabs for cash flow, financing, and the long-term projection. Save the deal, or export a one-page PDF to share.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:22px;">
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+      <span><strong>Don't know your local averages?</strong> Type a postal code or city into the market-benchmark field and the app fills in reference €/m² and rent figures for you. You can override any of them.</span>
+    </div>
+  </section>
+
+  <!-- ============ THE TABS ============ -->
+  <section id="tabs">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span>
+      <h2>A tour of the tabs</h2>
+    </div>
+    <p class="section-sub">The analysis is organised into tabs, each answering one question.</p>
+
+    <div class="grid grid-2">
+      <div class="card feature">
+        <span class="fico g-indigo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg></span>
+        <h3>Summary</h3>
+        <p>The plain-English headline: the verdict, what it would cost you each month, and the one or two things that make or break the deal. Start here.</p>
+      </div>
+
+      <div class="card feature">
+        <span class="fico g-sky"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/></svg></span>
+        <h3>Key Metrics</h3>
+        <p>The investor's dashboard: gross &amp; net yield, price multiple (Kaufpreisfaktor), cash-on-cash return, and a market benchmark comparing the listing's €/m² and rent/m² to the local average.</p>
+      </div>
+
+      <div class="card feature">
+        <span class="fico g-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <h3>Cash flow</h3>
+        <p>Where the money goes each month — rent in, costs and loan out. Includes a <strong>yearly cash-flow chart</strong> that marks the year the deal turns positive, and an <strong>income-vs-outflow</strong> chart showing exactly why each year is red or green.</p>
+      </div>
+
+      <div class="card feature">
+        <span class="fico g-violet"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+        <h3>Financing</h3>
+        <p>How your mortgage really works. A jargon-free explainer of the interest + Tilgung payment, a chart of the loan shrinking over time (with the effect of any extra repayments), and the full year-by-year payment schedule.</p>
+      </div>
+
+      <div class="card feature">
+        <span class="fico g-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
+        <h3>Projection</h3>
+        <p>The long game: property appreciation, rent growth, a sale at the end of your holding period, IRR and money multiple — plus a full <strong>after-tax view</strong> and a <strong>property-vs-ETF</strong> comparison of the same cash.</p>
+      </div>
+
+      <div class="card feature">
+        <span class="fico g-teal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg></span>
+        <h3>Scenarios</h3>
+        <p>A one-glance stress test: Cautious, Base and Optimistic versions of the deal side by side, so you can see how sensitive the outcome is to your assumptions.</p>
+      </div>
+
+      <div class="card feature" style="grid-column: 1 / -1;">
+        <span class="fico g-slate"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
+        <h3>Compare</h3>
+        <p>Save several listings and line them up in one table, with the best value flagged for each metric — perfect for choosing between a shortlist of flats.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <p style="font-weight:700; margin:0 0 10px;">How to read the verdict</p>
+      <div class="verdicts">
+        <span class="chip chip-good"><span class="dot" style="background:var(--good)"></span> Buy — the numbers stack up</span>
+        <span class="chip chip-warn"><span class="dot" style="background:var(--warn)"></span> Caution — mixed signals, dig deeper</span>
+        <span class="chip chip-bad"><span class="dot" style="background:var(--bad)"></span> Avoid — the maths doesn't work here</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXTRA TOOLS ============ -->
+  <section id="tools">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+      <h2>Extra tools</h2>
+    </div>
+    <p class="section-sub">Optional power features, reachable from the buttons in the top-right of the app.</p>
+
+    <div class="grid grid-2">
+      <div class="card feature">
+        <span class="tag">Negotiation</span>
+        <h3>Max offer price (goal-seek)</h3>
+        <p>Work backwards: tell it the yield, return or break-even you need, and it solves for the highest price you could pay and still hit it — your negotiation ceiling.</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">Playground</span>
+        <h3>What-if sensitivity lab</h3>
+        <p>Drag sliders for price, rent, interest rate and more, and watch every output move live, with the change versus your current numbers shown alongside.</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">Decision</span>
+        <h3>Rent vs. Buy</h3>
+        <p>Compares staying a tenant against buying, so you can see which leaves you better off over your chosen horizon.</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">Reality check</span>
+        <h3>Affordability</h3>
+        <p>Weighs the monthly commitment against your income and expenses to sanity-check whether the deal is comfortable for you.</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">Share</span>
+        <h3>PDF export</h3>
+        <p>Generates a designed one-page infographic of the deal — great for sharing with a partner, adviser or the bank.</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">Learn</span>
+        <h3>Beginner glossary &amp; settings</h3>
+        <p>A plain-language glossary of every term, plus editable defaults for taxes and running costs (which vary by Bundesland).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section id="glossary">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+      <h2>Key terms, in plain English</h2>
+    </div>
+    <p class="section-sub">The handful of concepts worth knowing before you read the numbers.</p>
+
+    <div class="card">
+      <dl class="terms">
+        <div class="term">
+          <dt>Cold rent <span class="de">Kaltmiete</span></dt>
+          <dd>The rent for the flat itself, without heating and utilities. This is your income; the extras just pass through to the tenant.</dd>
+        </div>
+        <div class="term">
+          <dt>Gross &amp; net yield <span class="de">Brutto-/Nettomietrendite</span></dt>
+          <dd>Yearly rent as a percentage of the price. Gross ignores costs; net subtracts running costs — the more honest number.</dd>
+        </div>
+        <div class="term">
+          <dt>Price multiple <span class="de">Kaufpreisfaktor</span></dt>
+          <dd>How many years of rent equal the purchase price. Lower is cheaper. A quick way to gauge if a flat is over-priced.</dd>
+        </div>
+        <div class="term">
+          <dt>Cash flow</dt>
+          <dd>What's left each month after rent pays the running costs and the loan. Negative means you top it up; positive means it pays you.</dd>
+        </div>
+        <div class="term">
+          <dt>Repayment rate <span class="de">Tilgung</span></dt>
+          <dd>How fast you pay the loan down. It's <em>added</em> to the interest rate to form one fixed monthly payment — it isn't paid on top. Higher Tilgung = debt-free sooner. It builds your equity, so it isn't "lost" money.</dd>
+        </div>
+        <div class="term">
+          <dt>Fixed-interest period <span class="de">Zinsbindung</span></dt>
+          <dd>How long the bank guarantees your interest rate — commonly 5, 10, 15 or 20 years. After it ends, the rate can change.</dd>
+        </div>
+        <div class="term">
+          <dt>Remaining debt <span class="de">Restschuld</span></dt>
+          <dd>What you still owe when the fixed period ends. You either keep paying at the same rate, or refinance it (Anschlussfinanzierung).</dd>
+        </div>
+        <div class="term">
+          <dt>Closing costs <span class="de">Kaufnebenkosten</span></dt>
+          <dd>The extra costs on top of the price: transfer tax, notary, land registry and agent — typically ~9–12% in Germany.</dd>
+        </div>
+        <div class="term">
+          <dt>HOA fee <span class="de">Hausgeld</span></dt>
+          <dd>The monthly building fee. Part of it (umlagefähig) can be recharged to the tenant; the rest is your cost.</dd>
+        </div>
+        <div class="term">
+          <dt>Depreciation <span class="de">AfA</span></dt>
+          <dd>A yearly tax deduction on the building's value that reduces your taxable rental income (in the after-tax view).</dd>
+        </div>
+        <div class="term">
+          <dt>Speculation tax <span class="de">Spekulationssteuer</span></dt>
+          <dd>Tax on the profit if you sell within 10 years. Hold 10+ years and the sale profit is generally tax-free.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY ============ -->
+  <section id="privacy">
+    <div class="section-head">
+      <span class="sico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+      <h2>Private by design</h2>
+    </div>
+    <p class="section-sub">Your numbers never leave your device.</p>
+
+    <div class="card">
+      <ul class="clean">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> No server, no accounts, no sign-up — the whole app runs in your browser.</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Everything you enter is stored only in your own browser and is never uploaded.</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> No analytics or tracking. Clearing your browser data (or the in-app reset) removes it.</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Works offline once loaded — you can even use it while viewing a flat with no signal.</li>
+      </ul>
+    </div>
+
+    <div class="callout callout-good" style="margin-top:22px;">
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></span>
+      <span><strong>Bottom line:</strong> use it to turn any listing into a clear, shareable investment read in minutes — then confirm the assumptions with a professional before you commit.</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>Apartment Investment Analyzer — User Guide</span>
+    <span class="muted">A personal decision-support tool. Not financial or tax advice.</span>
+  </footer>
+
+</div>
+</body>
+</html>

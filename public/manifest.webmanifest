@@ -1,0 +1,15 @@
+{
+  "name": "Apartment Investment Analyzer",
+  "short_name": "Apt Analyzer",
+  "description": "Decide if a German rental apartment is a good investment — yields, cash flow, after-tax projection and more.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1020",
+  "theme_color": "#4f46e5",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

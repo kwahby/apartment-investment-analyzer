@@ -1,0 +1,927 @@
+{
+  "meta": {
+    "description": "Approximate average residential buy and cold-rent prices per m² by German postal code.",
+    "currency": "EUR",
+    "asOf": "2025-Q4",
+    "sources": [
+      "immowelt Preiskompass Q3/2025",
+      "JLL Wohnungsmarktüberblick H2/2025",
+      "ImmoScout24 WohnBarometer",
+      "LBS Immobilien-Preisspiegel 2025",
+      "BBSR Deutschlandatlas (Angebotsmieten)",
+      "Mietspiegel city rent tables 2025/26"
+    ],
+    "disclaimer": "Approximate, for guidance only. Verify against a current local source before deciding."
+  },
+  "entries": [
+    {
+      "plz": "86150",
+      "city": "Augsburg",
+      "district": "Innenstadt",
+      "state": "Bayern",
+      "avgPricePerSqm": 4600,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "86152",
+      "city": "Augsburg",
+      "district": "Bahnhofsviertel",
+      "state": "Bayern",
+      "avgPricePerSqm": 4400,
+      "avgRentPerSqm": 14.0
+    },
+    {
+      "plz": "86157",
+      "city": "Augsburg",
+      "district": "Pfersee",
+      "state": "Bayern",
+      "avgPricePerSqm": 4100,
+      "avgRentPerSqm": 13.5
+    },
+    {
+      "plz": "86161",
+      "city": "Augsburg",
+      "district": "Hochfeld",
+      "state": "Bayern",
+      "avgPricePerSqm": 3800,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "10115",
+      "city": "Berlin",
+      "district": "Mitte",
+      "state": "Berlin",
+      "avgPricePerSqm": 6200,
+      "avgRentPerSqm": 17.0
+    },
+    {
+      "plz": "10405",
+      "city": "Berlin",
+      "district": "Prenzlauer Berg",
+      "state": "Berlin",
+      "avgPricePerSqm": 5800,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "10585",
+      "city": "Berlin",
+      "district": "Charlottenburg",
+      "state": "Berlin",
+      "avgPricePerSqm": 5500,
+      "avgRentPerSqm": 16.0
+    },
+    {
+      "plz": "12043",
+      "city": "Berlin",
+      "district": "Neukölln",
+      "state": "Berlin",
+      "avgPricePerSqm": 4600,
+      "avgRentPerSqm": 15.0
+    },
+    {
+      "plz": "13353",
+      "city": "Berlin",
+      "district": "Wedding",
+      "state": "Berlin",
+      "avgPricePerSqm": 4200,
+      "avgRentPerSqm": 14.0
+    },
+    {
+      "plz": "33602",
+      "city": "Bielefeld",
+      "district": "Mitte",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3300,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "33611",
+      "city": "Bielefeld",
+      "district": "Schildesche",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2800,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "33615",
+      "city": "Bielefeld",
+      "district": "Innenstadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3100,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "33617",
+      "city": "Bielefeld",
+      "district": "Gadderbaum",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3000,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "44787",
+      "city": "Bochum",
+      "district": "Innenstadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2800,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "44789",
+      "city": "Bochum",
+      "district": "Ehrenfeld",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2900,
+      "avgRentPerSqm": 10.2
+    },
+    {
+      "plz": "44795",
+      "city": "Bochum",
+      "district": "Weitmar",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2600,
+      "avgRentPerSqm": 9.4
+    },
+    {
+      "plz": "44801",
+      "city": "Bochum",
+      "district": "Querenburg",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2500,
+      "avgRentPerSqm": 9.3
+    },
+    {
+      "plz": "53111",
+      "city": "Bonn",
+      "district": "Zentrum",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4600,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "53113",
+      "city": "Bonn",
+      "district": "Südstadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 15.0
+    },
+    {
+      "plz": "53173",
+      "city": "Bonn",
+      "district": "Bad Godesberg",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4300,
+      "avgRentPerSqm": 13.5
+    },
+    {
+      "plz": "53225",
+      "city": "Bonn",
+      "district": "Beuel",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3900,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "28195",
+      "city": "Bremen",
+      "district": "Mitte",
+      "state": "Bremen",
+      "avgPricePerSqm": 3400,
+      "avgRentPerSqm": 11.5
+    },
+    {
+      "plz": "28203",
+      "city": "Bremen",
+      "district": "Östliche Vorstadt",
+      "state": "Bremen",
+      "avgPricePerSqm": 3600,
+      "avgRentPerSqm": 12.0
+    },
+    {
+      "plz": "28209",
+      "city": "Bremen",
+      "district": "Schwachhausen",
+      "state": "Bremen",
+      "avgPricePerSqm": 3700,
+      "avgRentPerSqm": 12.0
+    },
+    {
+      "plz": "28259",
+      "city": "Bremen",
+      "district": "Huchting",
+      "state": "Bremen",
+      "avgPricePerSqm": 2500,
+      "avgRentPerSqm": 9.5
+    },
+    {
+      "plz": "44135",
+      "city": "Dortmund",
+      "district": "Innenstadt-Ost",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2900,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "44137",
+      "city": "Dortmund",
+      "district": "Innenstadt-West",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2900,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "44225",
+      "city": "Dortmund",
+      "district": "Hombruch",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2800,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "44329",
+      "city": "Dortmund",
+      "district": "Scharnhorst",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2100,
+      "avgRentPerSqm": 8.8
+    },
+    {
+      "plz": "01067",
+      "city": "Dresden",
+      "district": "Wilsdruffer Vorstadt",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3200,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "01097",
+      "city": "Dresden",
+      "district": "Innere Neustadt",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3100,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "01187",
+      "city": "Dresden",
+      "district": "Plauen",
+      "state": "Sachsen",
+      "avgPricePerSqm": 2700,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "01309",
+      "city": "Dresden",
+      "district": "Striesen",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3000,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "47051",
+      "city": "Duisburg",
+      "district": "Dellviertel",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2100,
+      "avgRentPerSqm": 9.0
+    },
+    {
+      "plz": "47057",
+      "city": "Duisburg",
+      "district": "Neudorf",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2300,
+      "avgRentPerSqm": 9.2
+    },
+    {
+      "plz": "47137",
+      "city": "Duisburg",
+      "district": "Meiderich",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 1700,
+      "avgRentPerSqm": 8.0
+    },
+    {
+      "plz": "47166",
+      "city": "Duisburg",
+      "district": "Hamborn",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 1500,
+      "avgRentPerSqm": 7.5
+    },
+    {
+      "plz": "40213",
+      "city": "Düsseldorf",
+      "district": "Altstadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5500,
+      "avgRentPerSqm": 16.0
+    },
+    {
+      "plz": "40217",
+      "city": "Düsseldorf",
+      "district": "Unterbilk",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "40223",
+      "city": "Düsseldorf",
+      "district": "Bilk",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4600,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "40474",
+      "city": "Düsseldorf",
+      "district": "Golzheim",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5200,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "45127",
+      "city": "Essen",
+      "district": "Stadtkern",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2700,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "45130",
+      "city": "Essen",
+      "district": "Rüttenscheid",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3400,
+      "avgRentPerSqm": 11.5
+    },
+    {
+      "plz": "45144",
+      "city": "Essen",
+      "district": "Holsterhausen",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2800,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "45219",
+      "city": "Essen",
+      "district": "Kettwig",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 3600,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "60311",
+      "city": "Frankfurt am Main",
+      "district": "Altstadt",
+      "state": "Hessen",
+      "avgPricePerSqm": 7000,
+      "avgRentPerSqm": 19.0
+    },
+    {
+      "plz": "60313",
+      "city": "Frankfurt am Main",
+      "district": "Innenstadt",
+      "state": "Hessen",
+      "avgPricePerSqm": 7000,
+      "avgRentPerSqm": 19.0
+    },
+    {
+      "plz": "60316",
+      "city": "Frankfurt am Main",
+      "district": "Nordend",
+      "state": "Hessen",
+      "avgPricePerSqm": 6200,
+      "avgRentPerSqm": 18.0
+    },
+    {
+      "plz": "60486",
+      "city": "Frankfurt am Main",
+      "district": "Bockenheim",
+      "state": "Hessen",
+      "avgPricePerSqm": 5400,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "60594",
+      "city": "Frankfurt am Main",
+      "district": "Sachsenhausen",
+      "state": "Hessen",
+      "avgPricePerSqm": 6000,
+      "avgRentPerSqm": 17.5
+    },
+    {
+      "plz": "79098",
+      "city": "Freiburg im Breisgau",
+      "district": "Altstadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5800,
+      "avgRentPerSqm": 18.0
+    },
+    {
+      "plz": "79102",
+      "city": "Freiburg im Breisgau",
+      "district": "Wiehre",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5500,
+      "avgRentPerSqm": 17.5
+    },
+    {
+      "plz": "79104",
+      "city": "Freiburg im Breisgau",
+      "district": "Herdern",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5400,
+      "avgRentPerSqm": 17.0
+    },
+    {
+      "plz": "79106",
+      "city": "Freiburg im Breisgau",
+      "district": "Stühlinger",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "20095",
+      "city": "Hamburg",
+      "district": "Hamburg-Altstadt",
+      "state": "Hamburg",
+      "avgPricePerSqm": 6800,
+      "avgRentPerSqm": 17.5
+    },
+    {
+      "plz": "20144",
+      "city": "Hamburg",
+      "district": "Rotherbaum",
+      "state": "Hamburg",
+      "avgPricePerSqm": 7000,
+      "avgRentPerSqm": 18.0
+    },
+    {
+      "plz": "20259",
+      "city": "Hamburg",
+      "district": "Eimsbüttel",
+      "state": "Hamburg",
+      "avgPricePerSqm": 6200,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "22087",
+      "city": "Hamburg",
+      "district": "Uhlenhorst",
+      "state": "Hamburg",
+      "avgPricePerSqm": 6400,
+      "avgRentPerSqm": 17.0
+    },
+    {
+      "plz": "22765",
+      "city": "Hamburg",
+      "district": "Altona-Altstadt",
+      "state": "Hamburg",
+      "avgPricePerSqm": 5800,
+      "avgRentPerSqm": 16.0
+    },
+    {
+      "plz": "30159",
+      "city": "Hannover",
+      "district": "Mitte",
+      "state": "Niedersachsen",
+      "avgPricePerSqm": 3900,
+      "avgRentPerSqm": 12.5
+    },
+    {
+      "plz": "30161",
+      "city": "Hannover",
+      "district": "List",
+      "state": "Niedersachsen",
+      "avgPricePerSqm": 3700,
+      "avgRentPerSqm": 12.0
+    },
+    {
+      "plz": "30167",
+      "city": "Hannover",
+      "district": "Nordstadt",
+      "state": "Niedersachsen",
+      "avgPricePerSqm": 3400,
+      "avgRentPerSqm": 11.5
+    },
+    {
+      "plz": "30451",
+      "city": "Hannover",
+      "district": "Linden-Nord",
+      "state": "Niedersachsen",
+      "avgPricePerSqm": 3300,
+      "avgRentPerSqm": 11.5
+    },
+    {
+      "plz": "76131",
+      "city": "Karlsruhe",
+      "district": "Oststadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 4200,
+      "avgRentPerSqm": 12.5
+    },
+    {
+      "plz": "76133",
+      "city": "Karlsruhe",
+      "district": "Innenstadt-West",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 4400,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "76135",
+      "city": "Karlsruhe",
+      "district": "Südweststadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 4000,
+      "avgRentPerSqm": 12.5
+    },
+    {
+      "plz": "76137",
+      "city": "Karlsruhe",
+      "district": "Südstadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 3900,
+      "avgRentPerSqm": 12.0
+    },
+    {
+      "plz": "50667",
+      "city": "Köln",
+      "district": "Altstadt-Nord",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5600,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "50823",
+      "city": "Köln",
+      "district": "Ehrenfeld",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4900,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "50937",
+      "city": "Köln",
+      "district": "Sülz",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "51063",
+      "city": "Köln",
+      "district": "Mülheim",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4000,
+      "avgRentPerSqm": 14.0
+    },
+    {
+      "plz": "04109",
+      "city": "Leipzig",
+      "district": "Zentrum",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3200,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "04155",
+      "city": "Leipzig",
+      "district": "Gohlis",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3000,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "04275",
+      "city": "Leipzig",
+      "district": "Südvorstadt",
+      "state": "Sachsen",
+      "avgPricePerSqm": 3100,
+      "avgRentPerSqm": 10.5
+    },
+    {
+      "plz": "04317",
+      "city": "Leipzig",
+      "district": "Reudnitz",
+      "state": "Sachsen",
+      "avgPricePerSqm": 2600,
+      "avgRentPerSqm": 9.5
+    },
+    {
+      "plz": "55116",
+      "city": "Mainz",
+      "district": "Altstadt",
+      "state": "Rheinland-Pfalz",
+      "avgPricePerSqm": 4800,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "55118",
+      "city": "Mainz",
+      "district": "Neustadt",
+      "state": "Rheinland-Pfalz",
+      "avgPricePerSqm": 4500,
+      "avgRentPerSqm": 15.0
+    },
+    {
+      "plz": "55122",
+      "city": "Mainz",
+      "district": "Hartenberg-Münchfeld",
+      "state": "Rheinland-Pfalz",
+      "avgPricePerSqm": 4200,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "68159",
+      "city": "Mannheim",
+      "district": "Innenstadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 3900,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "68165",
+      "city": "Mannheim",
+      "district": "Oststadt",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 4200,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "68169",
+      "city": "Mannheim",
+      "district": "Neckarstadt-West",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 3000,
+      "avgRentPerSqm": 11.0
+    },
+    {
+      "plz": "68199",
+      "city": "Mannheim",
+      "district": "Neckarau",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 3300,
+      "avgRentPerSqm": 11.5
+    },
+    {
+      "plz": "41061",
+      "city": "Mönchengladbach",
+      "district": "Stadtmitte",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2700,
+      "avgRentPerSqm": 10.0
+    },
+    {
+      "plz": "41063",
+      "city": "Mönchengladbach",
+      "district": "Eicken",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2500,
+      "avgRentPerSqm": 9.5
+    },
+    {
+      "plz": "41236",
+      "city": "Mönchengladbach",
+      "district": "Rheydt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2300,
+      "avgRentPerSqm": 9.0
+    },
+    {
+      "plz": "80331",
+      "city": "München",
+      "district": "Altstadt",
+      "state": "Bayern",
+      "avgPricePerSqm": 11000,
+      "avgRentPerSqm": 23.0
+    },
+    {
+      "plz": "80469",
+      "city": "München",
+      "district": "Isarvorstadt",
+      "state": "Bayern",
+      "avgPricePerSqm": 10000,
+      "avgRentPerSqm": 22.0
+    },
+    {
+      "plz": "80687",
+      "city": "München",
+      "district": "Laim",
+      "state": "Bayern",
+      "avgPricePerSqm": 8000,
+      "avgRentPerSqm": 19.0
+    },
+    {
+      "plz": "80798",
+      "city": "München",
+      "district": "Maxvorstadt",
+      "state": "Bayern",
+      "avgPricePerSqm": 9800,
+      "avgRentPerSqm": 21.5
+    },
+    {
+      "plz": "81667",
+      "city": "München",
+      "district": "Haidhausen",
+      "state": "Bayern",
+      "avgPricePerSqm": 9200,
+      "avgRentPerSqm": 20.5
+    },
+    {
+      "plz": "48143",
+      "city": "Münster",
+      "district": "Altstadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4800,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "48147",
+      "city": "Münster",
+      "district": "Kreuzviertel",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4700,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "48151",
+      "city": "Münster",
+      "district": "Aaseestadt",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4300,
+      "avgRentPerSqm": 13.5
+    },
+    {
+      "plz": "48155",
+      "city": "Münster",
+      "district": "Hansaviertel",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 4000,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "90402",
+      "city": "Nürnberg",
+      "district": "Lorenz",
+      "state": "Bayern",
+      "avgPricePerSqm": 4300,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "90403",
+      "city": "Nürnberg",
+      "district": "Sebald",
+      "state": "Bayern",
+      "avgPricePerSqm": 4300,
+      "avgRentPerSqm": 13.0
+    },
+    {
+      "plz": "90409",
+      "city": "Nürnberg",
+      "district": "Nordstadt",
+      "state": "Bayern",
+      "avgPricePerSqm": 3900,
+      "avgRentPerSqm": 12.5
+    },
+    {
+      "plz": "90478",
+      "city": "Nürnberg",
+      "district": "St. Peter",
+      "state": "Bayern",
+      "avgPricePerSqm": 3700,
+      "avgRentPerSqm": 12.0
+    },
+    {
+      "plz": "70173",
+      "city": "Stuttgart",
+      "district": "Stuttgart-Mitte",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5600,
+      "avgRentPerSqm": 17.0
+    },
+    {
+      "plz": "70182",
+      "city": "Stuttgart",
+      "district": "Stuttgart-Ost",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5200,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "70193",
+      "city": "Stuttgart",
+      "district": "Stuttgart-West",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5300,
+      "avgRentPerSqm": 16.5
+    },
+    {
+      "plz": "70597",
+      "city": "Stuttgart",
+      "district": "Degerloch",
+      "state": "Baden-Württemberg",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 15.5
+    },
+    {
+      "plz": "65183",
+      "city": "Wiesbaden",
+      "district": "Mitte",
+      "state": "Hessen",
+      "avgPricePerSqm": 4800,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "65185",
+      "city": "Wiesbaden",
+      "district": "Rheingauviertel",
+      "state": "Hessen",
+      "avgPricePerSqm": 4700,
+      "avgRentPerSqm": 14.0
+    },
+    {
+      "plz": "65189",
+      "city": "Wiesbaden",
+      "district": "Südost",
+      "state": "Hessen",
+      "avgPricePerSqm": 4300,
+      "avgRentPerSqm": 13.5
+    },
+    {
+      "plz": "65193",
+      "city": "Wiesbaden",
+      "district": "Nordost",
+      "state": "Hessen",
+      "avgPricePerSqm": 5000,
+      "avgRentPerSqm": 14.5
+    },
+    {
+      "plz": "42103",
+      "city": "Wuppertal",
+      "district": "Elberfeld",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2500,
+      "avgRentPerSqm": 9.5
+    },
+    {
+      "plz": "42105",
+      "city": "Wuppertal",
+      "district": "Elberfeld-West",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2600,
+      "avgRentPerSqm": 9.5
+    },
+    {
+      "plz": "42277",
+      "city": "Wuppertal",
+      "district": "Barmen",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2100,
+      "avgRentPerSqm": 8.8
+    },
+    {
+      "plz": "42285",
+      "city": "Wuppertal",
+      "district": "Oberbarmen",
+      "state": "Nordrhein-Westfalen",
+      "avgPricePerSqm": 2000,
+      "avgRentPerSqm": 8.6
+    }
+  ],
+  "cityFallback": [
+    { "city": "Augsburg", "state": "Bayern", "avgPricePerSqm": 4200, "avgRentPerSqm": 14.0 },
+    { "city": "Berlin", "state": "Berlin", "avgPricePerSqm": 4900, "avgRentPerSqm": 15.5 },
+    { "city": "Bielefeld", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 3000, "avgRentPerSqm": 10.5 },
+    { "city": "Bochum", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 2600, "avgRentPerSqm": 9.4 },
+    { "city": "Bonn", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 4300, "avgRentPerSqm": 13.8 },
+    { "city": "Bremen", "state": "Bremen", "avgPricePerSqm": 3050, "avgRentPerSqm": 11.0 },
+    { "city": "Dortmund", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 2650, "avgRentPerSqm": 10.0 },
+    { "city": "Dresden", "state": "Sachsen", "avgPricePerSqm": 2800, "avgRentPerSqm": 10.5 },
+    { "city": "Duisburg", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 1900, "avgRentPerSqm": 8.4 },
+    { "city": "Düsseldorf", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 4700, "avgRentPerSqm": 15.1 },
+    { "city": "Essen", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 2700, "avgRentPerSqm": 10.0 },
+    { "city": "Frankfurt am Main", "state": "Hessen", "avgPricePerSqm": 5600, "avgRentPerSqm": 18.0 },
+    { "city": "Freiburg im Breisgau", "state": "Baden-Württemberg", "avgPricePerSqm": 5200, "avgRentPerSqm": 17.8 },
+    { "city": "Hamburg", "state": "Hamburg", "avgPricePerSqm": 6000, "avgRentPerSqm": 16.3 },
+    { "city": "Hannover", "state": "Niedersachsen", "avgPricePerSqm": 3450, "avgRentPerSqm": 11.8 },
+    { "city": "Karlsruhe", "state": "Baden-Württemberg", "avgPricePerSqm": 4050, "avgRentPerSqm": 12.5 },
+    { "city": "Köln", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 4750, "avgRentPerSqm": 15.9 },
+    { "city": "Leipzig", "state": "Sachsen", "avgPricePerSqm": 2600, "avgRentPerSqm": 9.8 },
+    { "city": "Mainz", "state": "Rheinland-Pfalz", "avgPricePerSqm": 4400, "avgRentPerSqm": 15.3 },
+    { "city": "Mannheim", "state": "Baden-Württemberg", "avgPricePerSqm": 3600, "avgRentPerSqm": 12.2 },
+    { "city": "Mönchengladbach", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 2500, "avgRentPerSqm": 9.5 },
+    { "city": "München", "state": "Bayern", "avgPricePerSqm": 8200, "avgRentPerSqm": 21.0 },
+    { "city": "Münster", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 4400, "avgRentPerSqm": 13.9 },
+    { "city": "Nürnberg", "state": "Bayern", "avgPricePerSqm": 3900, "avgRentPerSqm": 12.5 },
+    { "city": "Stuttgart", "state": "Baden-Württemberg", "avgPricePerSqm": 5100, "avgRentPerSqm": 16.5 },
+    { "city": "Wiesbaden", "state": "Hessen", "avgPricePerSqm": 4600, "avgRentPerSqm": 13.9 },
+    { "city": "Wuppertal", "state": "Nordrhein-Westfalen", "avgPricePerSqm": 2300, "avgRentPerSqm": 9.1 }
+  ]
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+  <!-- rounded background -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- house roof -->
+  <path d="M32 12 L50 26 L46 26 L46 27 L18 27 L18 26 L14 26 Z" fill="#ffffff"/>
+  <!-- house body -->
+  <rect x="19" y="27" width="26" height="22" rx="2" fill="#ffffff"/>
+  <!-- rising bars (growth) inside the house -->
+  <rect x="23" y="40" width="4" height="6" rx="1" fill="#4338ca"/>
+  <rect x="30" y="36" width="4" height="10" rx="1" fill="#4338ca"/>
+  <rect x="37" y="31" width="4" height="15" rx="1" fill="#22c55e"/>
+  <!-- up arrow tip on the tallest bar -->
+  <path d="M39 27 L43 31 L35 31 Z" fill="#22c55e"/>
+</svg>
