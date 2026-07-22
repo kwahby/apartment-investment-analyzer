@@ -1,0 +1,13 @@
+# Enforce consistent LF line endings for all text files in the repo.
+* text=auto eol=lf
+
+# Binary files — no conversions
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
