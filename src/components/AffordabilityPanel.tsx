@@ -228,6 +228,12 @@ export function AffordabilityPanel({ apartment, loan, costs, projection, profile
           This is a simplified estimate — confirm with a Steuerberater.
         </p>
       </section>
+      <p className="muted small" style={{ padding: '0 4px' }}>
+        Affordability figures are rough estimates based on your inputs — not a credit assessment
+        or financial advice. Tax calculations use the simplified §32a EStG tariff and may differ
+        from your actual liability. Always confirm with a qualified tax advisor (Steuerberater)
+        and your bank before committing to a purchase.
+      </p>
     </div>
   );
 }

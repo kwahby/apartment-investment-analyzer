@@ -135,6 +135,11 @@ export function RentVsBuyPanel({ apartment, loan, costs, projection }: Props) {
           purple, buying has paid off. Renting looks strong early because you avoid the big upfront
           costs and invest them instead.
         </p>
+        <p className="muted small">
+          This comparison uses simplified assumptions (constant rent growth, no moving costs,
+          no brokerage fees on the ETF side). It is a directional guide — not financial advice.
+          Individual circumstances vary; consult a qualified advisor before deciding.
+        </p>
       </section>
     </div>
   );

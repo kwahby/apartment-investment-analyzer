@@ -194,7 +194,13 @@ The app builds to a static `dist/` folder and can be hosted on any static host:
 
 ## Disclaimer
 
-**Not financial, investment, or tax advice.** Apartment Investment Analyzer is a personal decision-support tool. All figures are estimates based on your inputs and carry no guarantee of accuracy or completeness. Always verify with a qualified financial and tax advisor before making any purchase decision.
+**Not financial, investment, or tax advice.** Apartment Investment Analyzer is a personal decision-support tool. All figures are estimates based on your inputs and carry no guarantee of accuracy or completeness. Market reference data (postal-code averages) is approximate and may be outdated. Tax calculations use simplified models of German tax law and may not reflect your personal situation. Always verify with a qualified financial advisor, tax advisor (Steuerberater), and your bank before making any purchase decision.
+
+---
+
+## Built with AI assistance
+
+This app was designed and developed with the help of **GitHub Copilot** (AI-assisted coding). All logic, calculations, and outputs are best-effort estimates and should be treated accordingly.
 - The app is fully responsive and works on phones (add-to-home-screen friendly).
 
 ---

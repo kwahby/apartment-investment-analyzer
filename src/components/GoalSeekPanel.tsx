@@ -110,8 +110,14 @@ export function GoalSeekPanel({ apartment, loan, costs, projection }: Props) {
               </>
             )}
           </p>
-        </>
+        </>}
       )}
+      <p className="muted small" style={{ marginTop: 12 }}>
+        The maximum offer price is a back-of-envelope estimate based on your current inputs — not a
+        formal valuation. It ignores individual negotiation factors, legal due diligence, and market
+        conditions. Not financial or property advice; verify with a qualified advisor before
+        making any offer.
+      </p>
     </section>
   );
 }
