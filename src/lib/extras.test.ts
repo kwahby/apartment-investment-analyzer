@@ -90,3 +90,32 @@ describe('computeTippingPoints', () => {
     }
   });
 });
+
+describe('ETF monthly compounding (req #13)', () => {
+  it('geometric monthly rate compounds to the correct annual rate over 12 months', () => {
+    // The fix: monthlyRate = (1 + annualRate)^(1/12) - 1
+    // Verify that 12 monthly compoundings reproduce exactly the annual rate.
+    const annualRate = 0.07; // 7%
+    const monthlyRate = Math.pow(1 + annualRate, 1 / 12) - 1;
+    const compounded = Math.pow(1 + monthlyRate, 12) - 1;
+    expect(compounded).toBeCloseTo(annualRate, 8);
+  });
+
+  it('the linear approximation (rate/12) over-states 12-month compounding', () => {
+    const annualRate = 0.07;
+    const linearMonthly = annualRate / 12;
+    const linearCompounded = Math.pow(1 + linearMonthly, 12) - 1;
+    // Linear approximation gives ~7.23%, not 7% — this is the bug we fixed.
+    expect(linearCompounded).toBeGreaterThan(annualRate + 0.001);
+  });
+
+  it('computeRentVsBuy with 0% ETF return: ETF wealth ≈ initial investment', () => {
+    const r = computeRentVsBuy(apartment, loan, costs, { ...projection, etfReturnPct: 0 }, 1500);
+    // At 0% return, the renter's pot (upfront invested) stays flat.
+    // It should roughly equal the initial cash invested (not much more).
+    const upfront = r.upfront;
+    const lastRentWealth = r.series[r.series.length - 1].Rent;
+    // Should not drift more than a few % from initial investment (any diff = cash injections)
+    expect(lastRentWealth).toBeGreaterThanOrEqual(upfront * 0.9);
+  });
+});

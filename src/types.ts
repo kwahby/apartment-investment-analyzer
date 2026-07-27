@@ -129,6 +129,12 @@ export interface Results {
   impliedRepaymentPct: number;
   /** True when the fixed period fully repays the loan (nothing left to refinance). */
   fullyRepaidWithinFixed: boolean;
+  /**
+   * True when the assumed follow-up interest rate is so high that the scheduled
+   * monthly payment no longer covers the first month's interest after the fixed
+   * period ends — i.e. the loan balance would grow rather than shrink.
+   */
+  negativeAmortizationRisk: boolean;
 
   // Target payoff
   /** The user's target payoff period, in years. */

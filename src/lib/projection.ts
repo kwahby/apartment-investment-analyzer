@@ -28,7 +28,8 @@ export function firstYearMonthlyAfterTax(
   params: ProjectionParams,
 ): { preTax: number; taxEffectMonthly: number; afterTax: number } {
   const year1Interest = results.amortization[0]?.cumulativeInterest ?? 0;
-  const buildingValue = (apartment.purchasePrice * params.buildingSharePct) / 100;
+  // Include closing costs in the AfA basis, consistent with computeProjection.
+  const buildingValue = round2(((apartment.purchasePrice + results.closingCosts) * params.buildingSharePct) / 100);
   const annualAfA = buildingValue * (params.afaRatePct / 100);
   // Year 1 always falls inside the 4-year Sonder-AfA window when it's enabled.
   const sonderAfA = params.sonderAfaEnabled ? buildingValue * (SONDER_AFA_RATE_PCT / 100) : 0;
@@ -123,7 +124,10 @@ export function computeProjection(
   const vacancyFactor = 1 - costs.vacancyPct / 100;
   const baseAnnualOperating = results.monthlyOperatingCosts * 12;
 
-  const buildingValue = (price * params.buildingSharePct) / 100;
+  // Depreciable building basis = (purchase price + acquisition costs) × building share.
+  // Acquisition costs (Kaufnebenkosten) are capitalised and allocated proportionally
+  // between land and building — they are NOT immediately deductible.
+  const buildingValue = round2(((price + results.closingCosts) * params.buildingSharePct) / 100);
   const annualDepreciation = params.taxEnabled
     ? round2((buildingValue * params.afaRatePct) / 100)
     : 0;

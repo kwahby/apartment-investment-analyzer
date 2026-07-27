@@ -278,6 +278,15 @@ export function computeResults(
   const restschuldAtFixedEnd = simRestschuld;
   const fullyRepaidWithinFixed = loanAmount > 0 && restschuldAtFixedEnd <= 0.01;
 
+  // Detect negative amortization: if the follow-up monthly payment is ≤ the
+  // first month's interest on the Restschuld, the balance will grow, not shrink.
+  const negativeAmortizationRisk =
+    loan.repaymentStrategy === 'followUp' &&
+    !fullyRepaidWithinFixed &&
+    restschuldAtFixedEnd > 0 &&
+    !loan.forceTargetPayoff &&
+    rawAnnuity <= restschuldAtFixedEnd * followUpMonthlyRate;
+
   // Does the active plan repay within the target?
   const meetsTarget = loanAmount <= 0
     ? true
@@ -429,6 +438,7 @@ export function computeResults(
     interestDuringFixed,
     impliedRepaymentPct,
     fullyRepaidWithinFixed,
+    negativeAmortizationRisk,
     targetPayoffYears: loan.targetPayoffYears,
     targetForced: loan.forceTargetPayoff,
     targetPayment,

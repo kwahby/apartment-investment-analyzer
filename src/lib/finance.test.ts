@@ -362,3 +362,43 @@ describe('computeResults - verdict', () => {
     expect(r.verdict.score).toBeLessThanOrEqual(100);
   });
 });
+
+describe('computeResults - negative amortization detection', () => {
+  it('does NOT flag negative amortization for a normal follow-up rate', () => {
+    const r = computeResults(apartment, loan, costs);
+    // 4% follow-up on a ~300k restschuld: monthly interest ~1000; annuity ~1200 > 1000
+    expect(r.negativeAmortizationRisk).toBe(false);
+  });
+
+  it('flags negative amortization when follow-up rate is very high', () => {
+    // Force a high follow-up rate: if Restschuld ≈ 300k and rate = 15%, monthly
+    // interest ≈ 3750 which far exceeds the ~1200 annuity.
+    const r = computeResults(
+      apartment,
+      { ...loan, repaymentStrategy: 'followUp', followUpInterestRatePct: 15 },
+      costs,
+    );
+    expect(r.negativeAmortizationRisk).toBe(true);
+  });
+
+  it('never flags negative amortization in payoffWithinFixed mode', () => {
+    const r = computeResults(
+      apartment,
+      { ...loan, repaymentStrategy: 'payoffWithinFixed', followUpInterestRatePct: 20 },
+      costs,
+    );
+    expect(r.negativeAmortizationRisk).toBe(false);
+  });
+
+  it('never flags when the loan is fully repaid within the fixed period', () => {
+    // High Tilgung + high rate = fully repaid within fixed
+    const r = computeResults(
+      apartment,
+      { ...loan, initialRepaymentPct: 20, repaymentStrategy: 'followUp', followUpInterestRatePct: 20 },
+      costs,
+    );
+    if (r.fullyRepaidWithinFixed) {
+      expect(r.negativeAmortizationRisk).toBe(false);
+    }
+  });
+});

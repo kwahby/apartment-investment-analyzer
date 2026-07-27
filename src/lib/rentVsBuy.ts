@@ -36,7 +36,7 @@ export function computeRentVsBuy(
   const appr = projection.annualAppreciationPct / 100;
   const rentG = projection.annualRentGrowthPct / 100;
   const costG = projection.annualCostInflationPct / 100;
-  const etfM = projection.etfReturnPct / 100 / 12;
+  const etfM = Math.pow(1 + projection.etfReturnPct / 100, 1 / 12) - 1; // geometric monthly rate
   const sellingPct = projection.sellingCostsPct / 100;
 
   const baseValue =

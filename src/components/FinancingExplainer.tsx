@@ -137,6 +137,21 @@ export function FinancingExplainer({ loan, r }: Props) {
           </li>
         )}
       </ul>
+
+      {r.negativeAmortizationRisk && (
+        <div className="fixed-callout fixed-callout-warn" style={{ marginTop: 12 }}>
+          <span>
+            ⚠️ <strong>Negative amortisation risk:</strong> at the assumed follow-up
+            rate of <strong>{loan.followUpInterestRatePct}%</strong>, your current
+            monthly payment of <strong>{formatEur2(r.monthlyAnnuity)}</strong> would
+            not fully cover the first month's interest on the remaining balance of{' '}
+            <strong>{formatEur(r.restschuldAtFixedEnd)}</strong>. The loan balance
+            would <em>grow</em> rather than shrink. Increase the Tilgung %, reduce
+            the follow-up rate assumption, or plan to make a lump-sum payment at
+            refinancing.
+          </span>
+        </div>
+      )}
     </section>
   );
 }

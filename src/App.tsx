@@ -283,7 +283,7 @@ function App() {
                 <CashFlowBreakdown r={results} />
                 <CashFlowChart projection={projection} r={results} />
                 <IncomeVsOutflowChart projection={projection} />
-                <CashFlowTimeline r={results} />
+                <CashFlowTimeline r={results} projection={projection} />
               </div>
             )}
 

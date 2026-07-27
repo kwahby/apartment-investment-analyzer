@@ -125,13 +125,14 @@ describe('computeProjection - after tax', () => {
     expect(shortHold.speculationTax).toBeGreaterThan(0);
   });
 
-  it('applies depreciation only to the building share', () => {
+  it('applies depreciation only to the building share (including closing costs)', () => {
     const taxed = computeProjection(apartment, costs, results, {
       ...projParams,
       taxEnabled: true,
     });
-    // 400000 * 70% * 2% = 5600 per year
-    expect(taxed.annualDepreciation).toBeCloseTo(5600, 0);
+    // (400000 + closingCosts) * 70% * 2%
+    const expected = (apartment.purchasePrice + results.closingCosts) * 0.7 * 0.02;
+    expect(taxed.annualDepreciation).toBeCloseTo(expected, 0);
   });
 
   it('after-tax total profit differs from pre-tax', () => {
@@ -153,8 +154,9 @@ describe('computeProjection - Sonderabschreibung (§7b)', () => {
       sonderAfaEnabled: true,
     });
     const withoutSonder = computeProjection(apartment, costs, results, base);
-    const buildingValue = (apartment.purchasePrice * base.buildingSharePct) / 100;
-    const extra = buildingValue * 0.05;
+    // Building basis now includes closing costs
+    const buildingBasis = (apartment.purchasePrice + results.closingCosts) * base.buildingSharePct / 100;
+    const extra = buildingBasis * 0.05;
 
     for (let i = 0; i < 4; i++) {
       expect(withSonder.years[i].depreciation).toBeCloseTo(
@@ -192,8 +194,8 @@ describe('computeProjection - Sonderabschreibung (§7b)', () => {
       ...base,
       sonderAfaEnabled: true,
     });
-    const buildingValue = (apartment.purchasePrice * base.buildingSharePct) / 100;
-    expect(withSonder.accumulatedDepreciation).toBeLessThanOrEqual(buildingValue + 0.5);
+    const buildingBasis = (apartment.purchasePrice + results.closingCosts) * base.buildingSharePct / 100;
+    expect(withSonder.accumulatedDepreciation).toBeLessThanOrEqual(buildingBasis + 0.5);
   });
 });
 
@@ -228,5 +230,42 @@ describe('computeProjection - property vs. ETF', () => {
       etfReturnPct: 0,
     });
     expect(zero.etfEndWealth).toBeCloseTo(zero.totalCashCommitted, 2);
+  });
+});
+
+describe('computeProjection - AfA basis includes acquisition costs (req #1)', () => {
+  it('depreciable basis = (price + closingCosts) * buildingShare', () => {
+    // For this apartment: price 400000 + closingCosts (6+1.5+0.5+3.57 = 11.57% = 46280)
+    // = 446280 * 70% = 312396; annual AfA at 2% = 6247.92
+    const taxed = computeProjection(apartment, costs, results, {
+      ...projParams,
+      taxEnabled: true,
+      afaRatePct: 2,
+      buildingSharePct: 70,
+      sonderAfaEnabled: false,
+    });
+    // Should be > pure-price-based basis (400000 * 70% * 2% = 5600)
+    expect(taxed.annualDepreciation).toBeGreaterThan(5600);
+    // Should include closing costs: (400000 + ~46280) * 70% * 2% ≈ 6248
+    expect(taxed.annualDepreciation).toBeCloseTo(
+      ((apartment.purchasePrice + results.closingCosts) * 0.7 * 0.02),
+      0,
+    );
+  });
+
+  it('AfA example from spec: price 250000, costs 27500, 70% building, 2% rate => 3885/yr', () => {
+    const smallApt: typeof apartment = { ...apartment, purchasePrice: 250000, monthlyColdRent: 1000 };
+    const smallCosts: typeof costs = {
+      transferTaxPct: 6, notaryPct: 4.5, landRegistryPct: 0, agentCommissionPct: 0.5,
+      maintenanceReservePctPerYear: 1, managementPerMonth: 30, vacancyPct: 3,
+    };
+    // Closing costs = 250000 * (6+4.5+0.5)/100 = 250000 * 0.11 = 27500
+    const smallResults = computeResults(smallApt, { ...loan, downPayment: 80000 }, smallCosts);
+    expect(smallResults.closingCosts).toBeCloseTo(27500, 0);
+    const smallProj = computeProjection(smallApt, smallCosts, smallResults, {
+      ...projParams, taxEnabled: true, buildingSharePct: 70, afaRatePct: 2, sonderAfaEnabled: false,
+    });
+    // (250000 + 27500) * 70% * 2% = 3885
+    expect(smallProj.annualDepreciation).toBeCloseTo(3885, 0);
   });
 });
