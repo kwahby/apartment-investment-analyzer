@@ -13,6 +13,8 @@ const costs: CostSettings = {
   landRegistryPct: 0.5,
   agentCommissionPct: 3.57,
   maintenanceReservePctPerYear: 1,
+  maintenanceSqmPerYear: 12,
+  maintenanceMode: 'pct',
   managementPerMonth: 30,
   vacancyPct: 3,
 };

@@ -313,7 +313,19 @@ export function computeResults(
   const nonRecoverableHausgeld = round2(
     apartment.hausgeld * (1 - clamp01(apartment.hausgeldRecoverableRatio)),
   );
-  const monthlyMaintenance = round2((price * (costs.maintenanceReservePctPerYear / 100)) / 12);
+  // Reserve (Instandhaltungsrücklage) is part of non-recoverable Hausgeld — cash leaves
+  // the landlord's account, but it is generally NOT immediately tax-deductible.
+  const monthlyHausgeldReserve = round2(
+    Math.min(
+      Math.max(0, apartment.hausgeldReserveMonthly ?? 0),
+      nonRecoverableHausgeld,
+    ),
+  );
+  const monthlyMaintenance = round2(
+    costs.maintenanceMode === 'sqm'
+      ? (apartment.sizeSqm * (costs.maintenanceSqmPerYear ?? 12)) / 12
+      : (price * (costs.maintenanceReservePctPerYear / 100)) / 12,
+  );
   const monthlyManagement = round2(costs.managementPerMonth);
   const monthlyOperatingCosts = round2(
     nonRecoverableHausgeld + monthlyMaintenance + monthlyManagement,
@@ -446,6 +458,7 @@ export function computeResults(
     meetsTarget,
     effectiveMonthlyRent,
     nonRecoverableHausgeld,
+    monthlyHausgeldReserve,
     monthlyMaintenance,
     monthlyManagement,
     monthlyVacancyCost,

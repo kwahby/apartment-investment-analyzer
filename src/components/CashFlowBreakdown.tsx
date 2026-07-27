@@ -17,6 +17,9 @@ export function CashFlowBreakdown({ r }: { r: Results }) {
       <div className="cf-table">
         <Row label="Cold rent (after vacancy allowance)" amount={r.effectiveMonthlyRent} kind="in" />
         <Row label="Non-recoverable Hausgeld" amount={r.nonRecoverableHausgeld} kind="out" />
+        {r.monthlyHausgeldReserve > 0 && (
+          <Row label="  of which: WEG reserve (not immediately tax-deductible)" amount={r.monthlyHausgeldReserve} kind="out" />
+        )}
         <Row label="Maintenance reserve" amount={r.monthlyMaintenance} kind="out" />
         <Row label="Property management" amount={r.monthlyManagement} kind="out" />
         <Row label="= Cash flow before loan" amount={r.monthlyCashFlowBeforeLoan} kind="total" />

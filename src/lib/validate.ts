@@ -42,6 +42,10 @@ export function validateInputs(
   if (costs.vacancyPct > 30) {
     w.push('Vacancy allowance above 30% is extreme — check the value.');
   }
+  const nonRecoverable = apartment.hausgeld * (1 - Math.min(1, Math.max(0, apartment.hausgeldRecoverableRatio)));
+  if ((apartment.hausgeldReserveMonthly ?? 0) > nonRecoverable + 0.5) {
+    w.push('WEG reserve exceeds the non-recoverable Hausgeld — the reserve can\'t be larger than what you pay yourself.');
+  }
 
   return w;
 }

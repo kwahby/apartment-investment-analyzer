@@ -123,6 +123,9 @@ export function computeProjection(
   const baseAnnualRent = apartment.monthlyColdRent * 12;
   const vacancyFactor = 1 - costs.vacancyPct / 100;
   const baseAnnualOperating = results.monthlyOperatingCosts * 12;
+  // Annual reserve contribution (Instandhaltungsrücklage) that is NOT immediately
+  // tax-deductible. Excluded from taxable income but still part of operating cash flow.
+  const baseAnnualReserve = results.monthlyHausgeldReserve * 12;
 
   // Depreciable building basis = (purchase price + acquisition costs) × building share.
   // Acquisition costs (Kaufnebenkosten) are capitalised and allocated proportionally
@@ -160,6 +163,8 @@ export function computeProjection(
     const grossRent = round2(baseAnnualRent * Math.pow(1 + rentG, t - 1));
     const effectiveRent = grossRent * vacancyFactor;
     const operatingCosts = round2(baseAnnualOperating * Math.pow(1 + costG, t - 1));
+    // Reserve grows with cost inflation but is not deductible until spent by the WEG.
+    const reserveThisYear = round2(baseAnnualReserve * Math.pow(1 + costG, t - 1));
     const interest = round2(cumInterest[t] - cumInterest[t - 1]);
     const principal = round2(Math.max(balance[t - 1] - balance[t], 0));
 
@@ -185,7 +190,7 @@ export function computeProjection(
 
     const depThisYear = round2(regularDep + sonderDep);
 
-    const taxableIncome = round2(effectiveRent - operatingCosts - interest - depThisYear);
+    const taxableIncome = round2(effectiveRent - (operatingCosts - reserveThisYear) - interest - depThisYear);
     const tax = params.taxEnabled
       ? round2((taxableIncome * params.marginalTaxRatePct) / 100)
       : 0;

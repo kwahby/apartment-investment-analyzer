@@ -67,13 +67,44 @@ export function SettingsPanel({
 
           <h3>Running cost assumptions</h3>
           <div className="grid-2">
-            <NumberField
-              label="Maintenance reserve / year"
-              value={costs.maintenanceReservePctPerYear}
-              onChange={(v) => upC({ maintenanceReservePctPerYear: v })}
-              suffix="% of price"
-              step={0.1}
-            />
+            {costs.maintenanceMode !== 'sqm' ? (
+              <NumberField
+                label="Maintenance reserve / year"
+                value={costs.maintenanceReservePctPerYear}
+                onChange={(v) => upC({ maintenanceReservePctPerYear: v })}
+                suffix="% of price"
+                step={0.1}
+                hint="Annual maintenance budget as % of the purchase price. Switch to €/m²/yr below if you prefer."
+              />
+            ) : (
+              <NumberField
+                label="Maintenance / year"
+                value={costs.maintenanceSqmPerYear ?? 12}
+                onChange={(v) => upC({ maintenanceSqmPerYear: v })}
+                suffix="€ / m² / yr"
+                step={1}
+                min={0}
+                hint="Annual maintenance budget per m² of living area. Typical German guidelines: €10–15/m²/yr for older buildings."
+              />
+            )}
+            <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 2 }}>
+              <span className="unit-toggle" role="group" aria-label="Maintenance input mode">
+                <button
+                  type="button"
+                  className={costs.maintenanceMode !== 'sqm' ? 'is-active' : ''}
+                  onClick={() => upC({ maintenanceMode: 'pct' })}
+                >
+                  % of price
+                </button>
+                <button
+                  type="button"
+                  className={costs.maintenanceMode === 'sqm' ? 'is-active' : ''}
+                  onClick={() => upC({ maintenanceMode: 'sqm' })}
+                >
+                  €/m²/yr
+                </button>
+              </span>
+            </div>
             <NumberField
               label="Property management / month"
               value={costs.managementPerMonth}

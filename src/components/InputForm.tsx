@@ -205,6 +205,15 @@ export function InputForm({ apartment, setApartment, loan, setLoan, costs, resul
               />
             );
           })()}
+          <NumberField
+            label="of which: WEG reserve (Instandhaltungsrücklage)"
+            value={apartment.hausgeldReserveMonthly ?? 0}
+            onChange={(v) => upA({ hausgeldReserveMonthly: v })}
+            suffix="€ / mo"
+            step={5}
+            min={0}
+            hint="Part of the non-recoverable Hausgeld that goes to the building reserve fund. This reduces your cash flow when paid but is generally NOT immediately tax-deductible (only deductible when the WEG spends it). Leave at 0 if unknown — the tax calculation then treats all non-recoverable Hausgeld as deductible."
+          />
         </div>
       </section>
 
@@ -301,6 +310,30 @@ export function InputForm({ apartment, setApartment, loan, setLoan, costs, resul
             hint="How much the renovation is expected to raise the property's value straight away. Feeds equity, appreciation and the sale price."
           />
         </div>
+        {(() => {
+          const renoCost = apartment.renovationCost ?? 0;
+          const threshold = (apartment.purchasePrice + results.closingCosts) * 0.15;
+          if (renoCost > 0 && renoCost > threshold) {
+            return (
+              <div className="input-warnings" style={{ marginTop: 10 }}>
+                <div className="input-warnings-head">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span>Potential anschaffungsnahe Herstellungskosten (§6 Abs. 1 Nr. 1a EStG)</span>
+                </div>
+                <ul>
+                  <li>
+                    The entered renovation cost ({formatEur(renoCost)}) exceeds 15% of the
+                    building acquisition cost ({formatEur(threshold)}). If incurred within the
+                    first 3 years after purchase, this may need to be <strong>capitalised
+                    and depreciated</strong> rather than deducted immediately.
+                    Confirm with a Steuerberater before relying on an immediate tax deduction.
+                  </li>
+                </ul>
+              </div>
+            );
+          }
+          return null;
+        })()}
       </section>
 
       <section className="card">

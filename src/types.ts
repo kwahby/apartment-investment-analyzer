@@ -23,6 +23,12 @@ export interface Apartment {
   hausgeld: number;
   /** Share of Hausgeld that can be passed to the tenant (umlagefähig), 0..1. */
   hausgeldRecoverableRatio: number;
+  /**
+   * Monthly contribution to the WEG building reserve fund (Instandhaltungsrücklage), in EUR.
+   * This is part of the non-recoverable Hausgeld. It reduces cash flow when paid, but
+   * is generally NOT tax-deductible until the WEG actually spends it (leave at 0 if unknown).
+   */
+  hausgeldReserveMonthly?: number;
   /** Year the building was constructed (optional, used for context). */
   buildYear?: number;
   /** Reference average purchase price per m² for the area (manual benchmark). */
@@ -79,6 +85,17 @@ export interface CostSettings {
   agentCommissionPct: number;
   /** Annual maintenance reserve as % of purchase price (owner-side upkeep). */
   maintenanceReservePctPerYear: number;
+  /**
+   * Maintenance cost per m² of living area per year (alternative to percentage-based).
+   * Only used when maintenanceMode = 'sqm'.
+   */
+  maintenanceSqmPerYear: number;
+  /**
+   * Whether maintenance is calculated as % of purchase price or €/m²/year.
+   * 'pct' (default) = maintenanceReservePctPerYear × purchasePrice.
+   * 'sqm' = maintenanceSqmPerYear × livingArea.
+   */
+  maintenanceMode: 'pct' | 'sqm';
   /** Property management cost per month in EUR (Verwaltung). */
   managementPerMonth: number;
   /** Assumed vacancy allowance as % of annual rent (Mietausfallwagnis). */
@@ -151,6 +168,8 @@ export interface Results {
   // Cash flow (monthly)
   effectiveMonthlyRent: number;
   nonRecoverableHausgeld: number;
+  /** Monthly WEG reserve contribution — reduces cash flow but not (immediately) taxable income. */
+  monthlyHausgeldReserve: number;
   monthlyMaintenance: number;
   monthlyManagement: number;
   monthlyVacancyCost: number;

@@ -7,6 +7,8 @@ export const DEFAULT_COST_SETTINGS: CostSettings = {
   landRegistryPct: 0.5,
   agentCommissionPct: 3.57, // typical buyer share incl. VAT
   maintenanceReservePctPerYear: 1, // % of purchase price per year
+  maintenanceSqmPerYear: 12,       // €/m²/yr (typical German guideline 10-15)
+  maintenanceMode: 'pct' as const,
   managementPerMonth: 30,
   vacancyPct: 3,
 };
@@ -34,6 +36,7 @@ export const DEFAULT_APARTMENT: Apartment = {
   monthlyColdRent: 1300,
   hausgeld: 250,
   hausgeldRecoverableRatio: 0.6,
+  hausgeldReserveMonthly: 0,
   buildYear: 1960,
   avgPricePerSqm: 3500,
   avgRentPerSqm: 0,

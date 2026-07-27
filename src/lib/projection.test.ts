@@ -14,6 +14,8 @@ const costs: CostSettings = {
   landRegistryPct: 0.5,
   agentCommissionPct: 3.57,
   maintenanceReservePctPerYear: 1,
+  maintenanceSqmPerYear: 12,
+  maintenanceMode: 'pct',
   managementPerMonth: 30,
   vacancyPct: 3,
 };
@@ -261,7 +263,9 @@ describe('computeProjection - AfA basis includes acquisition costs (req #1)', ()
     const smallApt: typeof apartment = { ...apartment, purchasePrice: 250000, monthlyColdRent: 1000 };
     const smallCosts: typeof costs = {
       transferTaxPct: 6, notaryPct: 4.5, landRegistryPct: 0, agentCommissionPct: 0.5,
-      maintenanceReservePctPerYear: 1, managementPerMonth: 30, vacancyPct: 3,
+      maintenanceReservePctPerYear: 1,
+  maintenanceSqmPerYear: 12,
+  maintenanceMode: 'pct', managementPerMonth: 30, vacancyPct: 3,
     };
     // Closing costs = 250000 * (6+4.5+0.5)/100 = 250000 * 0.11 = 27500
     const smallResults = computeResults(smallApt, { ...loan, downPayment: 80000 }, smallCosts);
