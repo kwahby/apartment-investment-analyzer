@@ -187,7 +187,7 @@ export function AffordabilityPanel({ apartment, loan, costs, projection, profile
         <h2>
           Your tax impact
           <InfoDot
-            text="How the rental changes your income tax. Early on, depreciation (AfA) plus deductible interest often create a paper loss that reduces your taxable income — money back. Later, when the flat turns a profit, you pay tax on it. Uses your marginal rate plus church tax."
+            text="How the rental changes your income tax. Early on, depreciation (AfA) plus deductible interest often create a paper loss that reduces your taxable income. Later, when the flat turns a profit, you pay tax on it. Uses your marginal rate plus church tax. This is a simplified planning estimate — not a Steuerberater calculation."
             label="About: tax impact"
           />
         </h2>
@@ -198,7 +198,7 @@ export function AffordabilityPanel({ apartment, loan, costs, projection, profile
               {a.year1TaxEffect >= 0 ? '+' : '−'}
               {formatEur(Math.abs(a.year1TaxEffect))}
             </span>
-            <span className="metric-label">Year 1 {a.year1TaxEffect >= 0 ? 'refund' : 'extra tax'}</span>
+            <span className="metric-label">Year 1 {a.year1TaxEffect >= 0 ? 'estimated tax saving' : 'extra tax'}</span>
           </div>
           <div className="metric metric-neutral">
             <span className="metric-value">
@@ -221,10 +221,10 @@ export function AffordabilityPanel({ apartment, loan, costs, projection, profile
         </div>
 
         <p className="muted small" style={{ marginTop: 12 }}>
-          You get money back in about <strong>{a.refundYears}</strong> of the{' '}
+          The estimated tax effect is positive in about <strong>{a.refundYears}</strong> of the{' '}
           {projection.holdingYears} years (the early ones, thanks to depreciation and interest).
           {a.year1TaxEffect >= 0 &&
-            ` That first-year refund of ${formatEur(a.year1TaxEffect)} effectively softens the monthly top-up by about ${formatEur(a.taxRefundMonthlyEquiv)}.`}{' '}
+            ` In year 1, deductible AfA and interest reduce the modelled taxable rental result. At your marginal rate the estimated tax effect is approximately ${formatEur(a.year1TaxEffect)} — equivalent to about ${formatEur(a.taxRefundMonthlyEquiv)}/month.`}{' '}
           This is a simplified estimate — confirm with a Steuerberater.
         </p>
       </section>

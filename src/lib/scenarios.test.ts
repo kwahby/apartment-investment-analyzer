@@ -55,6 +55,8 @@ const projection: ProjectionParams = {
   buildingSharePct: 70,
   afaRatePct: 2,
   sonderAfaEnabled: false,
+  sonder7bEligibleAreaSqm: 0,
+  sonder7bCostPerSqm: 0,
   etfReturnPct: 7,
 };
 

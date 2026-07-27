@@ -125,7 +125,7 @@ export function ProjectionPanel({ params, setParams, p, apartment, profile }: Pr
             hint="Costs when you sell (agent, notary, prep). Deducted from the sale price."
           />
           <NumberField
-            label="ETF return (for comparison)"
+            label="Expected net annual return (after tax &amp; fees)"
             value={params.etfReturnPct}
             onChange={(v) => up({ etfReturnPct: v })}
             suffix="% / year"
@@ -205,39 +205,95 @@ export function ProjectionPanel({ params, setParams, p, apartment, profile }: Pr
         )}
 
         {params.taxEnabled && (
-          <label className="checkbox-field" style={{ marginTop: 12 }}>
-            <input
-              type="checkbox"
-              checked={params.sonderAfaEnabled}
-              onChange={(e) => up({ sonderAfaEnabled: e.target.checked })}
-            />
-            <span>
-              Add Sonderabschreibung (§7b): +5%/year of the building value for the
-              first 4 years, on top of the regular AfA and interest — for qualifying
-              new builds (EH40/QNG energy standard + cost caps). Front-loads bigger
-              tax refunds into years 1–4.
-            </span>
-          </label>
-        )}
+          <>
+            <label className="checkbox-field" style={{ marginTop: 12 }}>
+              <input
+                type="checkbox"
+                checked={params.sonderAfaEnabled}
+                onChange={(e) => up({ sonderAfaEnabled: e.target.checked })}
+              />
+              <span>
+                Apply Sonderabschreibung §7b — +5%/year on the §7b basis for years 1–4
+                (qualifying new builds only — see eligibility below).
+              </span>
+            </label>
 
-        {params.taxEnabled && params.sonderAfaEnabled && (
-          <div className="fixed-callout fixed-callout-warn" style={{ marginTop: 10 }}>
-            <span>
-              ⚠️ <strong>Eligibility isn't checked for you.</strong> §7b only applies to{' '}
-              <strong>newly created residential rental space</strong> that meets{' '}
-              <em>all</em> of these:
-              <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
-                <li>Build application in the current window (1 Oct 2023 – 30 Sep 2029).</li>
-                <li>Energy standard <strong>Effizienzhaus 40 (EH40)</strong> with the{' '}
-                  <strong>QNG</strong> sustainability seal.</li>
-                <li>Construction cost ≤ €5,200/m²; the extra AfA is only granted on the
-                  first €4,000/m² of that.</li>
-                <li>Rented out as housing for ≥ 10 years (early sale/self-use claws it back).</li>
-              </ul>
-              A typical <strong>existing/used</strong> flat does <strong>not</strong> qualify —
-              leave this off unless your specific new build ticks every box.
-            </span>
-          </div>
+            {params.sonderAfaEnabled && (
+              <div style={{ marginTop: 10 }}>
+                <div className="grid-2">
+                  <NumberField
+                    label="Eligible living area (m²)"
+                    value={params.sonder7bEligibleAreaSqm ?? 0}
+                    onChange={(v) => up({ sonder7bEligibleAreaSqm: v })}
+                    suffix="m²"
+                    step={1}
+                    min={0}
+                    hint="The qualifying floor area for §7b. The assessment basis is capped at this area × €4,000/m². Leave at 0 if unknown (uses the building value — eligibility unverified)."
+                  />
+                  <NumberField
+                    label="Build cost / purchase cost per m²"
+                    value={params.sonder7bCostPerSqm ?? 0}
+                    onChange={(v) => up({ sonder7bCostPerSqm: v })}
+                    suffix="€/m²"
+                    step={100}
+                    min={0}
+                    hint="Total construction or purchase cost per m². If above €5,200/m² the property is not eligible for §7b. Leave at 0 if unknown (eligibility unverified)."
+                  />
+                </div>
+
+                {/* Eligibility status banner */}
+                {(() => {
+                  const cost = params.sonder7bCostPerSqm ?? 0;
+                  const area = params.sonder7bEligibleAreaSqm ?? 0;
+                  if (cost > 5200) {
+                    return (
+                      <div className="fixed-callout fixed-callout-warn" style={{ marginTop: 8 }}>
+                        <span>
+                          ❌ <strong>Not eligible:</strong> the entered cost of{' '}
+                          <strong>€{cost.toLocaleString('de-DE')}/m²</strong> exceeds the
+                          €5,200/m² statutory ceiling. §7b Sonder-AfA has not been applied.
+                        </span>
+                      </div>
+                    );
+                  }
+                  if (cost === 0 || area === 0) {
+                    return (
+                      <div className="fixed-callout fixed-callout-warn" style={{ marginTop: 8 }}>
+                        <span>
+                          ⚠️ <strong>Eligibility not verified.</strong> Enter the living area
+                          and build cost per m² above to confirm. Until then the §7b benefit
+                          is calculated on the full building basis without the area cap —
+                          this may overstate the deduction.{' '}
+                          Verify eligibility with a Steuerberater before relying on this figure.
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="fixed-callout fixed-callout-good" style={{ marginTop: 8 }}>
+                      <span>
+                        ✅ <strong>Eligible (cost check passed):</strong> §7b basis capped at{' '}
+                        <strong>{area} m² × €4,000 = €{(area * 4000).toLocaleString('de-DE')}</strong>.
+                        Annual extra AfA: <strong>€{Math.round(area * 4000 * 0.05).toLocaleString('de-DE')}</strong>{' '}
+                        for years 1–4 (capped at the actual depreciable building basis).
+                        Confirm all other §7b conditions (EH40/QNG, 10-year rental period) with
+                        a Steuerberater.
+                      </span>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            {params.sonderAfaEnabled && (
+              <p className="muted small" style={{ marginTop: 8 }}>
+                §7b requires: new-build residential rental, build application Oct 2023–Sep 2029,
+                EH40 energy standard with QNG seal, cost ≤ €5,200/m², rented ≥ 10 years.
+                Existing flats do <strong>not</strong> qualify.
+                Not financial or tax advice — verify with a Steuerberater.
+              </p>
+            )}
+          </>
         )}
       </section>
 
@@ -368,7 +424,7 @@ export function ProjectionPanel({ params, setParams, p, apartment, profile }: Pr
             info="Your annualized return on the property. Beating the ETF % means the flat outperforms per euro invested."
           />
           <Metric
-            label="ETF return (assumed)"
+            label="Expected net annual return"
             value={formatPct(p.etfReturnPct)}
             info="The benchmark you set above."
           />

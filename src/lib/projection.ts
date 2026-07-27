@@ -132,6 +132,21 @@ export function computeProjection(
     ? round2((buildingValue * params.afaRatePct) / 100)
     : 0;
 
+  // §7b Sonder-AfA assessment basis:
+  // - If the cost per m² exceeds the €5,200 eligibility ceiling, §7b does NOT apply.
+  // - The assessment basis is capped at eligibleArea × €4,000 (the statutory maximum).
+  // - If no area is entered (legacy/unknown), fall back to the building value as before.
+  const SONDER_COST_CEILING = 5200; // €/m² — eligibility threshold
+  const SONDER_BASIS_CAP_PER_SQM = 4000; // €/m² — max assessment basis
+  const sonder7bArea = Math.max(0, params.sonder7bEligibleAreaSqm ?? 0);
+  const sonder7bCost = Math.max(0, params.sonder7bCostPerSqm ?? 0);
+  // Eligible if cost check is not entered (conservative: include) or cost ≤ ceiling.
+  const sonder7bEligible = sonder7bCost === 0 || sonder7bCost <= SONDER_COST_CEILING;
+  // §7b assessment basis: capped at area × €4,000 when area is known, else building value.
+  const sonder7bBasis = sonder7bArea > 0
+    ? Math.min(buildingValue, round2(sonder7bArea * SONDER_BASIS_CAP_PER_SQM))
+    : buildingValue;
+
   const { balance, cumInterest } = loanByYear(results, holdingYears);
 
   const years: ProjectionYear[] = [];
@@ -156,12 +171,13 @@ export function computeProjection(
       : 0;
     accumulatedDepreciation += regularDep;
 
-    // Sonderabschreibung §7b: extra 5%/year for the first 4 years, on top of
-    // regular AfA, also capped at the remaining building basis.
+    // Sonderabschreibung §7b: extra 5%/year for the first 4 years on top of regular AfA.
+    // Assessment basis is capped at eligibleArea × €4,000 (or buildingValue if unknown).
+    // Property is ineligible if the cost per m² exceeds the €5,200 statutory ceiling.
     const sonderDep =
-      params.taxEnabled && params.sonderAfaEnabled && t <= SONDER_AFA_YEARS
+      params.taxEnabled && params.sonderAfaEnabled && sonder7bEligible && t <= SONDER_AFA_YEARS
         ? Math.min(
-            (buildingValue * SONDER_AFA_RATE_PCT) / 100,
+            (sonder7bBasis * SONDER_AFA_RATE_PCT) / 100,
             Math.max(0, buildingValue - accumulatedDepreciation),
           )
         : 0;

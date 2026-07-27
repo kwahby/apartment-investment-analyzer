@@ -56,6 +56,8 @@ const projParams: ProjectionParams = {
   buildingSharePct: 70,
   afaRatePct: 2,
   sonderAfaEnabled: false,
+  sonder7bEligibleAreaSqm: 0,
+  sonder7bCostPerSqm: 0,
   etfReturnPct: 7,
 };
 
@@ -243,6 +245,8 @@ describe('computeProjection - AfA basis includes acquisition costs (req #1)', ()
       afaRatePct: 2,
       buildingSharePct: 70,
       sonderAfaEnabled: false,
+  sonder7bEligibleAreaSqm: 0,
+  sonder7bCostPerSqm: 0,
     });
     // Should be > pure-price-based basis (400000 * 70% * 2% = 5600)
     expect(taxed.annualDepreciation).toBeGreaterThan(5600);
@@ -264,6 +268,8 @@ describe('computeProjection - AfA basis includes acquisition costs (req #1)', ()
     expect(smallResults.closingCosts).toBeCloseTo(27500, 0);
     const smallProj = computeProjection(smallApt, smallCosts, smallResults, {
       ...projParams, taxEnabled: true, buildingSharePct: 70, afaRatePct: 2, sonderAfaEnabled: false,
+  sonder7bEligibleAreaSqm: 0,
+  sonder7bCostPerSqm: 0,
     });
     // (250000 + 27500) * 70% * 2% = 3885
     expect(smallProj.annualDepreciation).toBeCloseTo(3885, 0);

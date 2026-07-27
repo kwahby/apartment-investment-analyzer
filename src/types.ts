@@ -231,10 +231,20 @@ export interface ProjectionParams {
   /** Annual depreciation (AfA) rate on the building, in %. */
   afaRatePct: number;
   /**
-   * Sonderabschreibung §7b: extra 5%/year of the building value for the first
-   * 4 years (new-build rental meeting energy/cost rules), on top of regular AfA.
+   * Sonderabschreibung §7b: extra 5%/year for the first 4 years.
+   * - `sonderAfaEnabled`: user has opted in to this regime.
+   * - `sonder7bEligibleAreaSqm`: the qualifying floor area in m² (living area).
+   *   If 0 or omitted, the existing building-value-based cap is used (legacy/unknown).
+   * - `sonder7bCostPerSqm`: build/purchase cost per m² (to check the €5,200 ceiling).
+   *   If above €5,200/m² the property is ineligible; if omitted eligibility is unverified.
+   * The §7b assessment basis is capped at the lesser of the depreciable building basis
+   * and `eligibleAreaSqm × €4,000`.
    */
   sonderAfaEnabled: boolean;
+  /** Living area (m²) used to check and cap the §7b assessment basis. 0 = not entered. */
+  sonder7bEligibleAreaSqm: number;
+  /** Construction/purchase cost per m² (incl. building portion) for the €5,200 eligibility check. 0 = not entered. */
+  sonder7bCostPerSqm: number;
   /** Assumed annual return of an alternative ETF investment, in %. */
   etfReturnPct: number;
 }
