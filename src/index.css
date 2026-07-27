@@ -41,9 +41,12 @@
 
 html {
   scroll-behavior: smooth;
+  /* Prevent any element from pushing the page wider than the viewport */
+  overflow-x: hidden;
 }
 
 body {
+  overflow-x: hidden;
   margin: 0;
   color: var(--ink);
   background:
