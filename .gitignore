@@ -17,9 +17,6 @@ dist-ssr
 .env.*
 !.env.example
 
-# Generated screenshots (re-run `npm run screenshots` to regenerate)
-public/screenshots/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

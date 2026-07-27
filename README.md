@@ -161,12 +161,10 @@ Core financial logic lives in `src/lib/` and is covered by unit tests in the sam
 
 ## Generating landing page screenshots
 
-The landing page carousel uses screenshots from `public/screenshots/`. These are **not committed** to the repo (see `.gitignore`). To regenerate them:
+The landing page carousel uses screenshots from `public/screenshots/`. To regenerate them after UI changes:
 
 1. Start the dev server: `npm run dev`
-2. Open the app in a browser that has Playwright available, navigate to each tab (`Summary`, `Key Metrics`, `Cash flow`, `Financing`, `Projection`, `Scenarios`) and screenshot the `.tab-panel` element into `public/screenshots/01-summary.png` … `06-scenarios.png`.
-
-Or simply run the app — the carousel degrades gracefully if the images are missing (broken image slots show; no JS error).
+2. Open the app, navigate to each tab and screenshot the `.tab-panel` element into `public/screenshots/01-summary.png` … `06-scenarios.png`.
 
 ---
 
