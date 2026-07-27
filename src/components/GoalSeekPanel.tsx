@@ -110,7 +110,7 @@ export function GoalSeekPanel({ apartment, loan, costs, projection }: Props) {
               </>
             )}
           </p>
-        </>}
+        </>
       )}
       <p className="muted small" style={{ marginTop: 12 }}>
         The maximum offer price is a back-of-envelope estimate based on your current inputs — not a
