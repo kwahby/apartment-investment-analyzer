@@ -17,6 +17,10 @@ dist-ssr
 .env.*
 !.env.example
 
+# LinkedIn carousel (generated artefact — not part of the app source)
+linkedin-carousel.pptx
+scripts/gen-carousel.cjs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
