@@ -27,6 +27,22 @@ const TIPS: Tip[] = [
     text: 'A common guideline: cover at least the closing costs plus 10–20% of the price from your own money. Less equity means a bigger loan, higher monthly payments and worse cash flow.',
   },
   {
+    term: 'Loan-to-value (LTV)',
+    text: 'Loan amount ÷ purchase price. It shows how heavily the property is financed: 80% LTV means the loan covers 80% of the price. Lower generally means a stronger equity buffer; above 100% means the loan also exceeds the property price, usually because closing costs are financed.',
+  },
+  {
+    term: 'Debt-service coverage (DSCR)',
+    text: 'Net operating income before the mortgage ÷ the annual loan payments. At 1.00×, rent after vacancy and owner-side running costs just covers the debt service. Below 1.00× requires a monthly top-up; around 1.20× or more provides a healthier buffer.',
+  },
+  {
+    term: 'Break-even cold rent',
+    text: 'The gross monthly Kaltmiete needed to cover the vacancy allowance, owner-side running costs and mortgage payment with no monthly top-up. Compare it with the entered rent: the difference is your rent buffer or shortfall.',
+  },
+  {
+    term: 'Refinance interest ceiling',
+    text: 'The highest follow-up interest rate at which your current monthly payment still covers the interest on the Restschuld after the fixed period. At that rate, none of the payment reduces principal; above it, the balance would grow unless the payment is increased. It is a stress threshold, not a predicted future rate.',
+  },
+  {
     term: 'Bruttomietrendite (gross yield)',
     text: 'Annual cold rent ÷ purchase price. A quick "is it worth a look" gauge. In expensive cities, 3–4% is common; 4%+ is attractive; under 3% is thin. It ignores costs, so it always looks better than reality.',
   },
@@ -156,8 +172,8 @@ export function Glossary({ defaultOpen = false, embedded = false }: { defaultOpe
           ))}
           <p className="muted small glossary-disclaimer">
             This tool gives rough estimates to help you compare listings — it is
-            not tax or financial advice. Numbers here ignore income tax and
-            depreciation (AfA). For a real purchase, confirm figures with the
+            not tax or financial advice. The optional after-tax view models income
+            tax and depreciation (AfA) using simplified assumptions. For a real purchase, confirm figures with the
             Teilungserklärung, the last owners' meeting minutes, the reserve fund
             balance, and ideally a tax advisor and your bank.
           </p>
