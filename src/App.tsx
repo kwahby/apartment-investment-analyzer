@@ -9,6 +9,7 @@ import { SimpleSummary } from './components/SimpleSummary';
 import { FinancingExplainer } from './components/FinancingExplainer';
 import { VerdictBanner } from './components/VerdictBanner';
 import { ResultsPanel } from './components/ResultsPanel';
+import { FinancingRiskPanel } from './components/FinancingRiskPanel';
 import { CashFlowBreakdown } from './components/CashFlowBreakdown';
 import { CashFlowTimeline } from './components/CashFlowTimeline';
 import { CashFlowChart } from './components/CashFlowChart';
@@ -267,6 +268,12 @@ function App() {
             {tab === 'overview' && (
               <div className="stack">
                 <ResultsPanel r={results} />
+                <FinancingRiskPanel
+                  apartment={apartment}
+                  loan={loan}
+                  costs={costs}
+                  results={results}
+                />
                 <BenchmarkPanel r={results} />
                 <AssumptionsSummary
                   apartment={apartment}

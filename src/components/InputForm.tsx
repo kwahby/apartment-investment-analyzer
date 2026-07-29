@@ -206,7 +206,7 @@ export function InputForm({ apartment, setApartment, loan, setLoan, costs, resul
             );
           })()}
           <NumberField
-            label="of which: WEG reserve (Instandhaltungsrücklage)"
+            label="of which: WEG reserve"
             value={apartment.hausgeldReserveMonthly ?? 0}
             onChange={(v) => upA({ hausgeldReserveMonthly: v })}
             suffix="€ / mo"

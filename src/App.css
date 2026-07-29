@@ -329,6 +329,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-width: 0;
 }
 .col-input {
   position: sticky;
@@ -496,6 +497,7 @@
   align-items: center;
   gap: 4px;
   min-height: 22px;
+  min-width: 0;
 }
 .field-label-adornment {
   margin-left: auto;
@@ -625,9 +627,15 @@
   color: #fff;
 }
 
+@media (max-width: 560px) {
+  .unit-toggle button {
+    padding-inline: 6px;
+  }
+}
+
 .grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0 16px;
 }
 
@@ -1513,6 +1521,24 @@
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 560px) {
+  .infodot-popup {
+    position: fixed;
+    inset: auto 16px 16px;
+    width: auto;
+    max-width: none;
+    transform: translateY(4px);
+  }
+  .infodot-popup::after {
+    display: none;
+  }
+  .infodot:hover .infodot-popup,
+  .infodot:focus .infodot-popup,
+  .infodot:focus-within .infodot-popup {
+    transform: translateY(0);
+  }
 }
 
 /* ---------- radio strategy group ---------- */

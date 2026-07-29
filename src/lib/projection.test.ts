@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { computeResults } from './finance';
-import { computeProjection, irr } from './projection';
+import { computeProjection, firstYearMonthlyAfterTax, irr } from './projection';
 import type {
   Apartment,
   CostSettings,
@@ -151,6 +151,22 @@ describe('computeProjection - after tax', () => {
 
 describe('computeProjection - Sonderabschreibung (§7b)', () => {
   const base = { ...projParams, taxEnabled: true };
+
+  it.each([
+    { label: 'capped basis', eligibleArea: 40, costPerSqm: 5000 },
+    { label: 'ineligible cost', eligibleArea: 80, costPerSqm: 5300 },
+  ])('keeps summary and detailed year-one tax aligned for $label', ({ eligibleArea, costPerSqm }) => {
+    const params = {
+      ...base,
+      sonderAfaEnabled: true,
+      sonder7bEligibleAreaSqm: eligibleArea,
+      sonder7bCostPerSqm: costPerSqm,
+    };
+    const summary = firstYearMonthlyAfterTax(apartment, results, params);
+    const detailed = computeProjection(apartment, costs, results, params);
+
+    expect(summary.afterTax).toBeCloseTo(detailed.years[0].cashFlowAfterTax / 12, 2);
+  });
 
   it('deducts an extra 5% of the building value in years 1-4', () => {
     const withSonder = computeProjection(apartment, costs, results, {

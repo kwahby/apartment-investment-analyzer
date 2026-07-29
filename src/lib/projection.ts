@@ -12,9 +12,23 @@ const CURRENT_YEAR = new Date().getFullYear();
 /** Sonderabschreibung §7b: +5% of building value per year for the first 4 years. */
 const SONDER_AFA_RATE_PCT = 5;
 const SONDER_AFA_YEARS = 4;
+const SONDER_COST_CEILING = 5200;
+const SONDER_BASIS_CAP_PER_SQM = 4000;
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
+}
+
+function sonder7bBasis(buildingValue: number, params: ProjectionParams): number {
+  if (!params.sonderAfaEnabled) return 0;
+
+  const eligibleArea = Math.max(0, params.sonder7bEligibleAreaSqm ?? 0);
+  const costPerSqm = Math.max(0, params.sonder7bCostPerSqm ?? 0);
+  if (costPerSqm > SONDER_COST_CEILING) return 0;
+
+  return eligibleArea > 0
+    ? Math.min(buildingValue, round2(eligibleArea * SONDER_BASIS_CAP_PER_SQM))
+    : buildingValue;
 }
 
 /**
@@ -32,7 +46,7 @@ export function firstYearMonthlyAfterTax(
   const buildingValue = round2(((apartment.purchasePrice + results.closingCosts) * params.buildingSharePct) / 100);
   const annualAfA = buildingValue * (params.afaRatePct / 100);
   // Year 1 always falls inside the 4-year Sonder-AfA window when it's enabled.
-  const sonderAfA = params.sonderAfaEnabled ? buildingValue * (SONDER_AFA_RATE_PCT / 100) : 0;
+  const sonderAfA = sonder7bBasis(buildingValue, params) * (SONDER_AFA_RATE_PCT / 100);
   const taxableAnnual =
     results.effectiveMonthlyRent * 12 - results.monthlyOperatingCosts * 12 - year1Interest - annualAfA - sonderAfA;
   const annualTax = (taxableAnnual * params.marginalTaxRatePct) / 100;
@@ -139,16 +153,7 @@ export function computeProjection(
   // - If the cost per m² exceeds the €5,200 eligibility ceiling, §7b does NOT apply.
   // - The assessment basis is capped at eligibleArea × €4,000 (the statutory maximum).
   // - If no area is entered (legacy/unknown), fall back to the building value as before.
-  const SONDER_COST_CEILING = 5200; // €/m² — eligibility threshold
-  const SONDER_BASIS_CAP_PER_SQM = 4000; // €/m² — max assessment basis
-  const sonder7bArea = Math.max(0, params.sonder7bEligibleAreaSqm ?? 0);
-  const sonder7bCost = Math.max(0, params.sonder7bCostPerSqm ?? 0);
-  // Eligible if cost check is not entered (conservative: include) or cost ≤ ceiling.
-  const sonder7bEligible = sonder7bCost === 0 || sonder7bCost <= SONDER_COST_CEILING;
-  // §7b assessment basis: capped at area × €4,000 when area is known, else building value.
-  const sonder7bBasis = sonder7bArea > 0
-    ? Math.min(buildingValue, round2(sonder7bArea * SONDER_BASIS_CAP_PER_SQM))
-    : buildingValue;
+  const specialDepreciationBasis = sonder7bBasis(buildingValue, params);
 
   const { balance, cumInterest } = loanByYear(results, holdingYears);
 
@@ -180,9 +185,9 @@ export function computeProjection(
     // Assessment basis is capped at eligibleArea × €4,000 (or buildingValue if unknown).
     // Property is ineligible if the cost per m² exceeds the €5,200 statutory ceiling.
     const sonderDep =
-      params.taxEnabled && params.sonderAfaEnabled && sonder7bEligible && t <= SONDER_AFA_YEARS
+      params.taxEnabled && specialDepreciationBasis > 0 && t <= SONDER_AFA_YEARS
         ? Math.min(
-            (sonder7bBasis * SONDER_AFA_RATE_PCT) / 100,
+            (specialDepreciationBasis * SONDER_AFA_RATE_PCT) / 100,
             Math.max(0, buildingValue - accumulatedDepreciation),
           )
         : 0;
