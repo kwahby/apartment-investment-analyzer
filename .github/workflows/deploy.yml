@@ -12,10 +12,11 @@ permissions:
   pages: write
   id-token: write
 
-# Only allow one deployment at a time; cancel any in-progress run
+# Only allow one deployment at a time. Queue newer runs so GitHub Pages can
+# finish the active deployment cleanly instead of leaving it stuck in progress.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
