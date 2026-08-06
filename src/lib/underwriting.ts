@@ -5,6 +5,7 @@ import * as financing from './financingRiskScore';
 import * as margin from './marginOfSafety';
 import * as recommendation from './recommendationEngine';
 import * as wealth from './wealthCreationScore';
+import { computeFinancingRisk } from './risk';
 
 export interface UnderwritingInput {
   apartment: Apartment;
@@ -24,6 +25,7 @@ export function calculateUnderwriting(input: UnderwritingInput) {
     projection: input.projection,
   });
   const marginResult = margin.breakdown(input);
+  const financingMetrics = computeFinancingRisk(input.apartment, input.costs, input.results);
   const recommendationResult = recommendation.breakdown({
     financialScore: financialResult.score,
     assetScore: assetResult.score,
@@ -31,6 +33,8 @@ export function calculateUnderwriting(input: UnderwritingInput) {
     wealthScore: wealthResult.score,
     marginPct: marginResult.marginPct,
     monthlyCashFlow: input.results.monthlyCashFlowAfterLoan,
+    dscr: financingMetrics.dscr,
+    cashFlowPositiveYears: input.results.cashFlowPositiveYears,
   });
 
   return {

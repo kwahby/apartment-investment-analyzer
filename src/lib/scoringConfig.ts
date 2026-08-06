@@ -68,21 +68,32 @@ export const SCORE_CONFIG = {
     },
   },
   recommendation: {
-    buy: {
-      financialMin: 70,
-      assetMin: 75,
-      financingMin: 60,
-      marginMin: 0,
+    dealBreakers: {
+      financialBelow: 35,
+      financingBelow: 35,
+      marginBelow: -15,
+      dscrBelow: 0.65,
+      extremeMonthlyDeficitBelow: -750,
     },
-    negotiate: {
-      financialMin: 50,
-      assetMin: 75,
-      marginMin: -10,
+    strongSignals: {
+      financialMin: 80,
+      financingMin: 70,
+      wealthMin: 70,
+      marginAbove: 15,
+      requiredForBuy: 3,
     },
-    pass: {
-      financialBelow: 50,
-      financingBelow: 40,
+    majorWeaknesses: {
+      financialBelow: 45,
+      financingBelow: 45,
+      wealthBelow: 40,
       marginBelow: -10,
+      requiredForPass: 2,
+    },
+    assessment: {
+      strongScoreMin: 75,
+      averageScoreMin: 50,
+      slightDeficitBelow: 0,
+      slightDeficitAbove: -300,
     },
   },
 } as const;

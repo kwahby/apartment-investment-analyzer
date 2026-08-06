@@ -9,65 +9,99 @@ export interface RecommendationInput {
   wealthScore: number | null;
   marginPct: number | null;
   monthlyCashFlow: number;
+  dscr: number | null;
+  cashFlowPositiveYears: number | null;
 }
 
 export interface RecommendationBreakdown {
   recommendation: Recommendation;
+  stars: number;
+  opportunityLabel: string;
+  strengths: string[];
+  weaknesses: string[];
+  dealBreakers: string[];
+  conclusion: string;
   reasons: { text: string; tone: 'positive' | 'negative' | 'neutral' }[];
 }
 
-function meets(value: number | null, minimum: number): boolean {
-  return value === null || value >= minimum;
+function below(value: number | null, threshold: number): boolean {
+  return value !== null && value < threshold;
+}
+
+function atLeast(value: number | null, threshold: number): boolean {
+  return value !== null && value >= threshold;
 }
 
 export function breakdown(input: RecommendationInput): RecommendationBreakdown {
   const rules = SCORE_CONFIG.recommendation;
-  const pass = (input.financialScore !== null && input.financialScore < rules.pass.financialBelow)
-    || (input.financingScore !== null && input.financingScore < rules.pass.financingBelow)
-    || (input.marginPct !== null && input.marginPct < rules.pass.marginBelow);
-  const buy = !pass
-    && meets(input.financialScore, rules.buy.financialMin)
-    && meets(input.assetScore, rules.buy.assetMin)
-    && meets(input.financingScore, rules.buy.financingMin)
-    && meets(input.marginPct, rules.buy.marginMin);
-  const negotiate = !pass && !buy && (
-    (input.financialScore !== null && input.financialScore >= rules.negotiate.financialMin)
-    || (input.assetScore !== null && input.assetScore >= rules.negotiate.assetMin)
-    || (input.marginPct !== null && input.marginPct >= rules.negotiate.marginMin)
-  );
-  const recommendation: Recommendation = pass ? 'PASS' : buy ? 'BUY' : negotiate ? 'NEGOTIATE' : 'PASS';
-  const reasons: RecommendationBreakdown['reasons'] = [];
+  const dealBreakers: string[] = [];
+  const financialHardStop = below(input.financialScore, rules.dealBreakers.financialBelow);
+  const financingHardStop = below(input.financingScore, rules.dealBreakers.financingBelow);
+  const pricingHardStop = below(input.marginPct, rules.dealBreakers.marginBelow);
 
-  if (input.wealthScore !== null && input.wealthScore >= 70) reasons.push({ text: 'Strong long-term wealth creation', tone: 'positive' });
-  if (input.assetScore !== null && input.assetScore >= 75) reasons.push({ text: 'Attractive apartment fundamentals', tone: 'positive' });
-  if (input.financingScore !== null && input.financingScore >= 60) reasons.push({ text: 'Healthy financing', tone: 'positive' });
-  if (input.marginPct !== null && input.marginPct >= 0) reasons.push({ text: 'Attractive pricing versus fair value', tone: 'positive' });
-  if (input.financialScore !== null && input.financialScore < 50) reasons.push({ text: 'Poor financial returns', tone: 'negative' });
-  else if (input.monthlyCashFlow < 0) reasons.push({ text: 'Weak monthly cash flow', tone: 'negative' });
-  if (input.financingScore !== null && input.financingScore < 40) reasons.push({ text: 'High financing risk', tone: 'negative' });
-  if (input.marginPct !== null && input.marginPct < -10) reasons.push({ text: 'Significantly above fair value', tone: 'negative' });
-  else if (input.marginPct !== null && input.marginPct < 0) reasons.push({ text: 'Slightly above fair value', tone: 'negative' });
-
-  const fallbacks: RecommendationBreakdown['reasons'] = [
-    input.financialScore === null
-      ? { text: 'Financial return data is incomplete', tone: 'neutral' }
-      : { text: input.financialScore >= 70 ? 'Strong investment economics' : 'Moderate investment economics', tone: input.financialScore >= 70 ? 'positive' : 'neutral' },
-    input.assetScore === null
-      ? { text: 'Limited apartment quality data', tone: 'neutral' }
-      : { text: input.assetScore >= 50 ? 'Sound apartment fundamentals' : 'Weak apartment fundamentals', tone: input.assetScore >= 50 ? 'positive' : 'negative' },
-    input.financingScore === null
-      ? { text: 'Financing metrics are unavailable', tone: 'neutral' }
-      : { text: input.financingScore >= 40 ? 'Manageable financing risk' : 'High financing risk', tone: input.financingScore >= 40 ? 'neutral' : 'negative' },
-    input.marginPct === null
-      ? { text: 'Fair value benchmark is unavailable', tone: 'neutral' }
-      : { text: input.marginPct >= 0 ? 'Price is supported by the benchmark' : 'Price exceeds the benchmark', tone: input.marginPct >= 0 ? 'positive' : 'negative' },
-  ];
-  for (const fallback of fallbacks) {
-    if (reasons.length >= 4) break;
-    if (!reasons.some((reason) => reason.text === fallback.text)) reasons.push(fallback);
+  if (financialHardStop) dealBreakers.push('Financial performance is below the minimum investment standard');
+  if (financingHardStop) dealBreakers.push('Financing risk exceeds the acceptable limit');
+  if (pricingHardStop) dealBreakers.push('Asking price is significantly above estimated fair value');
+  if (below(input.dscr, rules.dealBreakers.dscrBelow)) dealBreakers.push('Debt-service coverage is critically low');
+  if (input.monthlyCashFlow < rules.dealBreakers.extremeMonthlyDeficitBelow && input.cashFlowPositiveYears === null) {
+    dealBreakers.push('Extreme monthly deficit has no projected path to positive cash flow');
   }
 
-  return { recommendation, reasons: reasons.slice(0, 4) };
+  const strongSignals = [
+    atLeast(input.financialScore, rules.strongSignals.financialMin),
+    atLeast(input.financingScore, rules.strongSignals.financingMin),
+    atLeast(input.wealthScore, rules.strongSignals.wealthMin),
+    input.marginPct !== null && input.marginPct > rules.strongSignals.marginAbove,
+  ].filter(Boolean).length;
+  const majorWeaknesses = [
+    below(input.financialScore, rules.majorWeaknesses.financialBelow),
+    below(input.financingScore, rules.majorWeaknesses.financingBelow),
+    below(input.wealthScore, rules.majorWeaknesses.wealthBelow),
+    below(input.marginPct, rules.majorWeaknesses.marginBelow),
+  ].filter(Boolean).length;
+
+  const recommendation: Recommendation = dealBreakers.length > 0 || majorWeaknesses >= rules.majorWeaknesses.requiredForPass
+    ? 'PASS'
+    : strongSignals >= rules.strongSignals.requiredForBuy ? 'BUY' : 'NEGOTIATE';
+  const strengths: string[] = [];
+  const weaknesses: string[] = [];
+  const { strongScoreMin, averageScoreMin, slightDeficitAbove, slightDeficitBelow } = rules.assessment;
+
+  if (atLeast(input.financialScore, strongScoreMin)) strengths.push('Outstanding financial performance');
+  else if (atLeast(input.financialScore, averageScoreMin)) strengths.push('Acceptable investment economics');
+  else if (input.financialScore !== null && !financialHardStop) weaknesses.push('Weak financial returns');
+  if (atLeast(input.financingScore, strongScoreMin)) strengths.push('Strong financing profile');
+  else if (atLeast(input.financingScore, averageScoreMin)) strengths.push('Manageable financing profile');
+  else if (input.financingScore !== null && !financingHardStop) weaknesses.push('Elevated financing risk');
+  if (atLeast(input.wealthScore, strongScoreMin)) strengths.push('Excellent long-term wealth creation');
+  else if (atLeast(input.wealthScore, averageScoreMin)) strengths.push('Positive long-term wealth outlook');
+  else if (input.wealthScore !== null) weaknesses.push('Weak long-term wealth creation');
+  if (input.marginPct !== null && input.marginPct > rules.strongSignals.marginAbove) strengths.push('Significant discount to estimated fair value');
+  else if (input.marginPct !== null && input.marginPct >= 0) strengths.push('Asking price is supported by estimated fair value');
+  else if (input.marginPct !== null && input.marginPct >= rules.majorWeaknesses.marginBelow) weaknesses.push('Limited or negative pricing advantage');
+  else if (input.marginPct !== null && !pricingHardStop) weaknesses.push('Significantly above estimated fair value');
+  if (input.assetScore !== null && input.assetScore >= strongScoreMin) strengths.push('Attractive apartment characteristics');
+  else if (input.assetScore !== null && input.assetScore >= averageScoreMin) weaknesses.push('Average apartment characteristics');
+  else if (input.assetScore !== null) weaknesses.push('Weak apartment characteristics');
+  if (input.monthlyCashFlow < slightDeficitBelow && input.monthlyCashFlow >= slightDeficitAbove) weaknesses.push('Monthly cash flow is slightly negative');
+  else if (input.monthlyCashFlow < slightDeficitAbove) weaknesses.push('Monthly cash flow requires a substantial top-up');
+
+  const stars = recommendation === 'BUY' ? 5 : recommendation === 'NEGOTIATE' ? 4 : dealBreakers.length > 1 ? 1 : 2;
+  const opportunityLabel = recommendation === 'BUY'
+    ? 'Excellent investment opportunity'
+    : recommendation === 'NEGOTIATE' ? 'Good investment opportunity' : 'Weak investment opportunity';
+  const conclusion = recommendation === 'BUY'
+    ? 'The strengths clearly outweigh the weaknesses. The property should be pursued.'
+    : recommendation === 'NEGOTIATE'
+      ? 'The opportunity is worth pursuing if the price or financing terms can be improved.'
+      : 'The weaknesses outweigh the strengths. Capital should be deployed elsewhere.';
+  const reasons: RecommendationBreakdown['reasons'] = [
+    ...strengths.map((text) => ({ text, tone: 'positive' as const })),
+    ...weaknesses.map((text) => ({ text, tone: 'negative' as const })),
+    ...dealBreakers.map((text) => ({ text, tone: 'negative' as const })),
+  ];
+
+  return { recommendation, stars, opportunityLabel, strengths, weaknesses, dealBreakers, conclusion, reasons };
 }
 
 export function calculate(input: RecommendationInput): Recommendation {
@@ -75,5 +109,5 @@ export function calculate(input: RecommendationInput): Recommendation {
 }
 
 export function tooltip(): string {
-  return 'Summarizes the overall investment recommendation using deterministic decision rules rather than a single weighted score.';
+  return 'Applies investment-committee rules: deal breakers first, then independent strengths, weaknesses, pricing and financing terms. Scores explain the decision but are not averaged into it.';
 }

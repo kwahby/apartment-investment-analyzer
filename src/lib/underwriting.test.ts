@@ -11,11 +11,24 @@ const baseRecommendation = {
   wealthScore: 80,
   marginPct: 0,
   monthlyCashFlow: -100,
+  dscr: 1.2,
+  cashFlowPositiveYears: 20,
 };
 
 describe('recommendation engine', () => {
-  it('returns BUY only when every available buy threshold is met', () => {
-    expect(recommend(baseRecommendation).recommendation).toBe('BUY');
+  it('returns BUY when most independent strong signals are present despite an average asset', () => {
+    const result = recommend({
+      ...baseRecommendation,
+      financialScore: 100,
+      assetScore: 60,
+      financingScore: 88,
+      wealthScore: 78,
+      marginPct: 35.4,
+      monthlyCashFlow: 365.8,
+    });
+    expect(result.recommendation).toBe('BUY');
+    expect(result.strengths).toContain('Significant discount to estimated fair value');
+    expect(result.weaknesses).toContain('Average apartment characteristics');
   });
 
   it('returns NEGOTIATE for a strong asset with middling economics', () => {
@@ -23,13 +36,25 @@ describe('recommendation engine', () => {
   });
 
   it('returns PASS when a hard-stop rule is breached', () => {
-    expect(recommend({ ...baseRecommendation, financingScore: 39 }).recommendation).toBe('PASS');
-    expect(recommend({ ...baseRecommendation, marginPct: -11 }).recommendation).toBe('PASS');
+    expect(recommend({ ...baseRecommendation, financingScore: 34 }).recommendation).toBe('PASS');
+    expect(recommend({ ...baseRecommendation, marginPct: -16 }).recommendation).toBe('PASS');
+    expect(recommend({ ...baseRecommendation, dscr: 0.6 }).recommendation).toBe('PASS');
   });
 
-  it('always explains the recommendation with three or four reasons', () => {
-    expect(recommend({ ...baseRecommendation, wealthScore: 50 }).reasons.length).toBeGreaterThanOrEqual(3);
-    expect(recommend(baseRecommendation).reasons.length).toBeLessThanOrEqual(4);
+  it('passes an extreme deficit only when there is no projected path to positive cash flow', () => {
+    expect(recommend({ ...baseRecommendation, monthlyCashFlow: -800, cashFlowPositiveYears: null }).recommendation).toBe('PASS');
+    expect(recommend({ ...baseRecommendation, monthlyCashFlow: -800, cashFlowPositiveYears: 12 }).recommendation).not.toBe('PASS');
+  });
+
+  it('returns PASS for multiple major weaknesses without requiring one hard stop', () => {
+    expect(recommend({ ...baseRecommendation, financialScore: 40, wealthScore: 35 }).recommendation).toBe('PASS');
+  });
+
+  it('always provides structured strengths, weaknesses and a conclusion', () => {
+    const result = recommend(baseRecommendation);
+    expect(result.strengths.length).toBeGreaterThan(0);
+    expect(result.weaknesses.length).toBeGreaterThan(0);
+    expect(result.conclusion.length).toBeGreaterThan(0);
   });
 });
 

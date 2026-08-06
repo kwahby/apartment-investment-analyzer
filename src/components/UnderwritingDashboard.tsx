@@ -61,10 +61,12 @@ export function UnderwritingDashboard({ underwriting }: Props) {
   const recommendation = underwriting.recommendation.recommendation;
   const thesisClass = recommendation.toLowerCase();
   const thesisStatus = {
-    BUY: { symbol: '✓', subtitle: 'Meets all acquisition thresholds' },
-    NEGOTIATE: { symbol: '↔', subtitle: 'Promising, but the terms should improve' },
-    PASS: { symbol: '!', subtitle: 'One or more hard-stop rules were triggered' },
+    BUY: { symbol: '✓' },
+    NEGOTIATE: { symbol: '↔' },
+    PASS: { symbol: '!' },
   }[recommendation];
+  const thesis = underwriting.recommendation;
+  const starRating = `${'★'.repeat(thesis.stars)}${'☆'.repeat(5 - thesis.stars)}`;
   const margin = underwriting.margin;
   const marginClass = margin.marginPct === null ? 'neutral' : margin.marginPct >= 0 ? 'positive' : 'negative';
 
@@ -79,13 +81,39 @@ export function UnderwritingDashboard({ underwriting }: Props) {
           <span aria-hidden="true">{thesisStatus.symbol}</span>
           {recommendation}
         </div>
-        <p className="underwriting-subtitle">{thesisStatus.subtitle}</p>
+        <div className="underwriting-rating" aria-label={`${thesis.stars} out of 5 stars`}>{starRating}</div>
+        <p className="underwriting-subtitle">{thesis.opportunityLabel}</p>
         <ExpandableDetails label="investment thesis reasons">
-          <ul className="underwriting-reasons">
-            {underwriting.recommendation.reasons.map((reason) => (
-              <li className={`reason-${reason.tone}`} key={reason.text}>{reason.text}</li>
-            ))}
-          </ul>
+          <div className="underwriting-thesis-details">
+            {thesis.dealBreakers.length > 0 && (
+              <section>
+                <h4>Deal breakers</h4>
+                <ul className="underwriting-reasons">
+                  {thesis.dealBreakers.map((reason) => <li className="reason-negative" key={reason}>{reason}</li>)}
+                </ul>
+              </section>
+            )}
+            {thesis.strengths.length > 0 && (
+              <section>
+                <h4>Strengths</h4>
+                <ul className="underwriting-reasons">
+                  {thesis.strengths.map((reason) => <li className="reason-positive" key={reason}>{reason}</li>)}
+                </ul>
+              </section>
+            )}
+            {thesis.weaknesses.length > 0 && (
+              <section>
+                <h4>Weaknesses</h4>
+                <ul className="underwriting-reasons">
+                  {thesis.weaknesses.map((reason) => <li className="reason-negative" key={reason}>{reason}</li>)}
+                </ul>
+              </section>
+            )}
+            <section className="underwriting-conclusion">
+              <h4>Conclusion</h4>
+              <p>{thesis.conclusion}</p>
+            </section>
+          </div>
         </ExpandableDetails>
       </article>
 
