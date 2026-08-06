@@ -1,8 +1,10 @@
-import type { Apartment, CostSettings, LoanParams } from '../types';
+import type { Apartment, CostSettings, LoanParams, ProjectionParams } from '../types';
 import { computeResults } from './finance';
+import { computeProjection } from './projection';
+import { calculateUnderwriting } from './underwriting';
 
-type Label = 'Buy' | 'Caution' | 'Avoid';
-const RANK: Record<Label, number> = { Buy: 2, Caution: 1, Avoid: 0 };
+type Label = 'BUY' | 'NEGOTIATE' | 'PASS';
+const RANK: Record<Label, number> = { BUY: 2, NEGOTIATE: 1, PASS: 0 };
 
 export interface Flip {
   variable: 'interestRate' | 'price' | 'rent';
@@ -38,21 +40,33 @@ export function computeTippingPoints(
   apartment: Apartment,
   loan: LoanParams,
   costs: CostSettings,
+  projectionParams: ProjectionParams,
 ): Flip[] {
-  const current = computeResults(apartment, loan, costs).verdict.label;
+  const evaluate = (candidateApartment: Apartment, candidateLoan: LoanParams): Label => {
+    const results = computeResults(candidateApartment, candidateLoan, costs);
+    const projection = computeProjection(candidateApartment, costs, results, projectionParams);
+    return calculateUnderwriting({
+      apartment: candidateApartment,
+      loan: candidateLoan,
+      costs,
+      results,
+      projection,
+    }).recommendation.recommendation;
+  };
+  const current = evaluate(apartment, loan);
 
   const rateFlip = findDowngrade(
-    (rate) => computeResults(apartment, { ...loan, annualInterestRatePct: rate }, costs).verdict.label,
+    (rate) => evaluate(apartment, { ...loan, annualInterestRatePct: rate }),
     loan.annualInterestRatePct,
     15,
   );
   const priceFlip = findDowngrade(
-    (price) => computeResults({ ...apartment, purchasePrice: price }, loan, costs).verdict.label,
+    (price) => evaluate({ ...apartment, purchasePrice: price }, loan),
     apartment.purchasePrice,
     apartment.purchasePrice * 2.5,
   );
   const rentFlip = findDowngrade(
-    (rent) => computeResults({ ...apartment, monthlyColdRent: rent }, loan, costs).verdict.label,
+    (rent) => evaluate({ ...apartment, monthlyColdRent: rent }, loan),
     apartment.monthlyColdRent,
     Math.max(1, apartment.monthlyColdRent * 0.3),
   );

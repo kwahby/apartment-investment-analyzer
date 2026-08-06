@@ -408,16 +408,6 @@ export function computeResults(
     balconyWeightPct,
   };
 
-  // --- Verdict ---
-  const verdict = computeVerdict({
-    grossYieldPct,
-    monthlyCashFlowAfterLoan,
-    buyDeltaPct: benchmark.buyDeltaPct,
-    hasBenchmark: benchmark.hasData,
-    locationScore: benchmark.locationScore,
-    priceToRentMultiple,
-  });
-
   // Baseline schedule with NO lump sums (same payment & rate) so the chart can
   // show "with vs. without extra payments". Only needed when a lump sum is set.
   const amortizationNoExtra =
@@ -479,64 +469,10 @@ export function computeResults(
     pricePerSqm,
     rentPerSqm,
     benchmark,
-    verdict,
   };
 }
 
 function clamp01(n: number): number {
   if (Number.isNaN(n)) return 0;
   return Math.min(1, Math.max(0, n));
-}
-
-/**
- * Weighted 0..100 investment score with a Buy / Caution / Avoid label.
- * Weights: yield 35, cash flow 30, price vs district 20, location 15.
- */
-function computeVerdict(input: {
-  grossYieldPct: number;
-  monthlyCashFlowAfterLoan: number;
-  buyDeltaPct: number;
-  hasBenchmark: boolean;
-  locationScore: number;
-  priceToRentMultiple: number;
-}): Results['verdict'] {
-  const reasons: string[] = [];
-
-  // Yield sub-score (0..1): 2.5% -> 0, 5%+ -> 1
-  const yieldScore = clampNorm(input.grossYieldPct, 2.5, 5);
-  if (input.grossYieldPct >= 4) reasons.push(`Healthy gross yield (${input.grossYieldPct}%)`);
-  else if (input.grossYieldPct < 3) reasons.push(`Low gross yield (${input.grossYieldPct}%)`);
-
-  // Cash flow sub-score (0..1): -400€/mo -> 0, +200€/mo -> 1
-  const cfScore = clampNorm(input.monthlyCashFlowAfterLoan, -400, 200);
-  if (input.monthlyCashFlowAfterLoan >= 0) reasons.push('Positive monthly cash flow');
-  else reasons.push(`Negative cash flow (${Math.round(input.monthlyCashFlowAfterLoan)} €/mo)`);
-
-  // Price vs district sub-score (0..1): +20% over -> 0, -15% under -> 1
-  let priceScore = 0.5;
-  if (input.hasBenchmark) {
-    priceScore = clampNorm(-input.buyDeltaPct, -20, 15);
-    if (input.buyDeltaPct <= -5) reasons.push(`Priced ${Math.abs(input.buyDeltaPct)}% below district avg`);
-    else if (input.buyDeltaPct >= 10) reasons.push(`Priced ${input.buyDeltaPct}% above district avg`);
-  }
-
-  // Location sub-score (0..1): score 3 -> 0, 9 -> 1
-  const locScore = input.hasBenchmark ? clampNorm(input.locationScore, 3, 9) : 0.5;
-
-  const score = Math.round(
-    (yieldScore * 35 + cfScore * 30 + priceScore * 20 + locScore * 15),
-  );
-
-  let label: Results['verdict']['label'] = 'Avoid';
-  if (score >= 65) label = 'Buy';
-  else if (score >= 45) label = 'Caution';
-
-  return { label, score, reasons };
-}
-
-/** Normalize a value between lo and hi into 0..1 (clamped). */
-function clampNorm(value: number, lo: number, hi: number): number {
-  if (hi === lo) return 0.5;
-  const t = (value - lo) / (hi - lo);
-  return Math.min(1, Math.max(0, t));
 }

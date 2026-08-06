@@ -337,34 +337,6 @@ describe('computeResults - benchmark', () => {
   });
 });
 
-describe('computeResults - verdict', () => {
-  it('labels a strong deal as Buy', () => {
-    const good = computeResults(
-      { ...apartment, purchasePrice: 250000, monthlyColdRent: 1600 },
-      { ...loan, downPayment: 120000 },
-      costs,
-    );
-    expect(good.verdict.score).toBeGreaterThanOrEqual(65);
-    expect(good.verdict.label).toBe('Buy');
-  });
-
-  it('labels a weak deal as Avoid', () => {
-    const bad = computeResults(
-      { ...apartment, purchasePrice: 800000, monthlyColdRent: 900 },
-      { ...loan, downPayment: 40000 },
-      costs,
-    );
-    expect(bad.verdict.score).toBeLessThan(45);
-    expect(bad.verdict.label).toBe('Avoid');
-  });
-
-  it('always returns a score between 0 and 100', () => {
-    const r = computeResults(apartment, loan, costs);
-    expect(r.verdict.score).toBeGreaterThanOrEqual(0);
-    expect(r.verdict.score).toBeLessThanOrEqual(100);
-  });
-});
-
 describe('computeResults - negative amortization detection', () => {
   it('does NOT flag negative amortization for a normal follow-up rate', () => {
     const r = computeResults(apartment, loan, costs);

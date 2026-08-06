@@ -81,7 +81,7 @@ describe('computeRentVsBuy', () => {
 });
 
 describe('computeTippingPoints', () => {
-  const tips = computeTippingPoints(apartment, loan, costs);
+  const tips = computeTippingPoints(apartment, loan, costs, projection);
 
   it('returns a flip entry for rate, price and rent', () => {
     expect(tips.map((t) => t.variable)).toEqual(['interestRate', 'price', 'rent']);

@@ -3,6 +3,7 @@ import type { Apartment, CostSettings, LoanParams, ProjectionParams } from '../t
 import { computeResults } from '../lib/finance';
 import { computeProjection } from '../lib/projection';
 import { computeTippingPoints } from '../lib/tippingPoints';
+import { calculateUnderwriting } from '../lib/underwriting';
 import { formatEur, formatPct } from '../lib/format';
 
 interface Props {
@@ -113,9 +114,13 @@ export function SensitivityLab({ apartment, loan, costs, projection, onApply }: 
 
   const baseRes = computeResults(apartment, loan, costs);
   const baseProj = computeProjection(apartment, costs, baseRes, projection);
+  const underwriting = calculateUnderwriting({ apartment: modApt, loan: modLoan, costs: modCosts, results: res, projection: proj });
+  const baseUnderwriting = calculateUnderwriting({ apartment, loan, costs, results: baseRes, projection: baseProj });
 
   const vColor =
-    res.verdict.label === 'Buy' ? 'buy' : res.verdict.label === 'Avoid' ? 'avoid' : 'caution';
+    underwriting.recommendation.recommendation === 'BUY'
+      ? 'buy'
+      : underwriting.recommendation.recommendation === 'PASS' ? 'avoid' : 'caution';
 
   const buyVsEtf = proj.buyEndWealth - proj.etfEndWealth;
   const baseBuyVsEtf = baseProj.buyEndWealth - baseProj.etfEndWealth;
@@ -143,7 +148,7 @@ export function SensitivityLab({ apartment, loan, costs, projection, onApply }: 
   const apply = () =>
     onApply({ apartment: modApt, loan: modLoan, costs: modCosts, projection: modProj });
 
-  const tips = computeTippingPoints(modApt, modLoan, modCosts);
+  const tips = computeTippingPoints(modApt, modLoan, modCosts, modProj);
   const fmtTip = (t: (typeof tips)[number]) =>
     t.unit === '€' ? formatEur(t.flipValue ?? 0) : `${t.flipValue}%`;
 
@@ -157,15 +162,17 @@ export function SensitivityLab({ apartment, loan, costs, projection, onApply }: 
       {/* live outputs */}
       <div className={`slab-verdict v-${vColor}`}>
         <div className="slab-verdict-main">
-          <span className="slab-verdict-label">{res.verdict.label}</span>
-          <span className="slab-verdict-score">{Math.round(res.verdict.score)}/100</span>
+          <span className="slab-verdict-label">{underwriting.recommendation.recommendation}</span>
+          <span className="slab-verdict-score">Rules-based recommendation</span>
         </div>
         <div className="slab-verdict-delta">
-          {(() => {
-            const d = res.verdict.score - baseRes.verdict.score;
-            if (Math.abs(d) < 0.5) return 'no change vs current';
-            return `${d > 0 ? '▲ +' : '▼ '}${Math.round(Math.abs(d)) * (d > 0 ? 1 : -1)} pts vs current`;
-          })()}
+          Financial {underwriting.financial.score ?? 'n/a'}
+          {' · '}Asset {underwriting.asset.score ?? 'n/a'}
+          {' · '}Financing {underwriting.financing.score ?? 'n/a'}
+          {' · '}Wealth {underwriting.wealth.score ?? 'n/a'}
+          {underwriting.recommendation.recommendation !== baseUnderwriting.recommendation.recommendation
+            ? ` · changed from ${baseUnderwriting.recommendation.recommendation}`
+            : ' · recommendation unchanged'}
         </div>
       </div>
 

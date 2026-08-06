@@ -219,12 +219,6 @@ export interface Results {
     balconyWeightPct: number;
   };
 
-  // Verdict
-  verdict: {
-    label: 'Buy' | 'Caution' | 'Avoid';
-    score: number; // 0..100
-    reasons: string[];
-  };
 }
 
 /** Assumptions for the multi-year projection & after-tax analysis. */

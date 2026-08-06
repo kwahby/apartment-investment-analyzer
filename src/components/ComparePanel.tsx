@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import type { Apartment, CostSettings, LoanParams, ProjectionParams, SavedDeal } from '../types';
 import { computeResults } from '../lib/finance';
 import { computeProjection } from '../lib/projection';
+import { calculateUnderwriting } from '../lib/underwriting';
 import { formatEur, formatPct } from '../lib/format';
 
 interface CurrentInputs {
@@ -36,8 +37,12 @@ interface ComputedDeal {
   id: string;
   name: string;
   isCurrent: boolean;
-  verdict: 'Buy' | 'Caution' | 'Avoid';
-  score: number;
+  recommendation: 'BUY' | 'NEGOTIATE' | 'PASS';
+  financialScore: number | null;
+  assetScore: number | null;
+  financingScore: number | null;
+  wealthScore: number | null;
+  marginPct: number | null;
   price: number;
   pricePerSqm: number;
   cashInvested: number;
@@ -52,12 +57,23 @@ interface ComputedDeal {
 function compute(id: string, name: string, isCurrent: boolean, inp: CurrentInputs): ComputedDeal {
   const res = computeResults(inp.apartment, inp.loan, inp.costs);
   const proj = computeProjection(inp.apartment, inp.costs, res, inp.projection);
+  const underwriting = calculateUnderwriting({
+    apartment: inp.apartment,
+    loan: inp.loan,
+    costs: inp.costs,
+    results: res,
+    projection: proj,
+  });
   return {
     id,
     name,
     isCurrent,
-    verdict: res.verdict.label,
-    score: res.verdict.score,
+    recommendation: underwriting.recommendation.recommendation,
+    financialScore: underwriting.financial.score,
+    assetScore: underwriting.asset.score,
+    financingScore: underwriting.financing.score,
+    wealthScore: underwriting.wealth.score,
+    marginPct: underwriting.margin.marginPct,
     price: inp.apartment.purchasePrice,
     pricePerSqm: res.pricePerSqm,
     cashInvested: res.cashInvested,
@@ -71,7 +87,11 @@ function compute(id: string, name: string, isCurrent: boolean, inp: CurrentInput
 }
 
 const METRICS: MetricDef[] = [
-  { key: 'score', label: 'Score', dir: 'high', get: (m) => m.score, fmt: (v) => `${Math.round(v ?? 0)}/100` },
+  { key: 'financialScore', label: 'Financial performance', dir: 'high', get: (m) => m.financialScore, fmt: (v) => (v === null ? 'n/a' : `${Math.round(v)}/100`) },
+  { key: 'assetScore', label: 'Asset attractiveness', dir: 'high', get: (m) => m.assetScore, fmt: (v) => (v === null ? 'n/a' : `${Math.round(v)}/100`) },
+  { key: 'financingScore', label: 'Financing safety', dir: 'high', get: (m) => m.financingScore, fmt: (v) => (v === null ? 'n/a' : `${Math.round(v)}/100`) },
+  { key: 'wealthScore', label: 'Wealth creation', dir: 'high', get: (m) => m.wealthScore, fmt: (v) => (v === null ? 'n/a' : `${Math.round(v)}/100`) },
+  { key: 'margin', label: 'Margin of safety', dir: 'high', get: (m) => m.marginPct, fmt: (v) => (v === null ? 'n/a' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`) },
   { key: 'price', label: 'Purchase price', dir: 'low', get: (m) => m.price, fmt: (v) => formatEur(v ?? 0) },
   { key: 'pricePerSqm', label: 'Price / m²', dir: 'low', get: (m) => m.pricePerSqm, fmt: (v) => formatEur(v ?? 0) },
   { key: 'cashInvested', label: 'Cash invested', dir: 'low', get: (m) => m.cashInvested, fmt: (v) => formatEur(v ?? 0) },
@@ -230,7 +250,7 @@ export function ComparePanel({
                   {entries.map((e) => (
                     <th key={e.id} className={e.isCurrent ? 'is-current' : ''}>
                       <div className="compare-deal-name">{e.name}</div>
-                      <div className={`badge-verdict v-${e.verdict.toLowerCase()}`}>{e.verdict}</div>
+                      <div className={`badge-verdict v-${e.recommendation === 'BUY' ? 'buy' : e.recommendation === 'PASS' ? 'avoid' : 'caution'}`}>{e.recommendation}</div>
                       {e.isCurrent ? (
                         <div className="compare-tag">live</div>
                       ) : (

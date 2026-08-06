@@ -1,7 +1,8 @@
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import type { Apartment, LoanParams, Results, Projection } from '../types';
+import type { Apartment, CostSettings, LoanParams, Results, Projection } from '../types';
 import { formatEur, formatEur2, formatPct } from './format';
+import { calculateUnderwriting } from './underwriting';
 
 const esc = (s: string) =>
   s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
@@ -53,19 +54,17 @@ function bar(label: string, value: number, max: number, grad: string, valueStr: 
 }
 
 function verdictTheme(label: string) {
-  if (label === 'Buy')
+  if (label === 'BUY')
     return { color: '#22c55e', pill: 'linear-gradient(135deg,#22c55e,#15803d)', g0: '#86efac', g1: '#22d3ee', mark: '✓' };
-  if (label === 'Avoid')
+  if (label === 'PASS')
     return { color: '#f87171', pill: 'linear-gradient(135deg,#fb7185,#be123c)', g0: '#fca5a5', g1: '#fb7185', mark: '✕' };
   return { color: '#fbbf24', pill: 'linear-gradient(135deg,#fbbf24,#b45309)', g0: '#fde68a', g1: '#fbbf24', mark: '!' };
 }
 
-function buildReport(apartment: Apartment, loan: LoanParams, r: Results, p: Projection): HTMLElement {
-  const v = verdictTheme(r.verdict.label);
-  const score = Math.round(r.verdict.score);
-  const R = 60;
-  const circ = 2 * Math.PI * R;
-  const prog = (circ * Math.min(100, Math.max(0, score))) / 100;
+function buildReport(apartment: Apartment, loan: LoanParams, costs: CostSettings, r: Results, p: Projection): HTMLElement {
+  const underwriting = calculateUnderwriting({ apartment, loan, costs, results: r, projection: p });
+  const recommendation = underwriting.recommendation.recommendation;
+  const v = verdictTheme(recommendation);
 
   const cfPos = r.monthlyCashFlowAfterLoan >= 0;
   const profitPos = p.totalProfit >= 0;
@@ -131,13 +130,25 @@ function buildReport(apartment: Apartment, loan: LoanParams, r: Results, p: Proj
     return `<span style="width:14px;height:14px;border-radius:50%;background:${on ? '#4f46e5' : '#e2e8f0'};display:inline-block"></span>`;
   }).join('');
 
-  const reasons = r.verdict.reasons
+  const reasons = underwriting.recommendation.reasons
     .slice(0, 3)
     .map(
-      (x) =>
-        `<span style="display:inline-block;background:rgba(255,255,255,0.12);color:#e0e7ff;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:999px;margin:0 6px 6px 0">${esc(x)}</span>`,
+      (reason) =>
+        `<span style="display:inline-block;background:rgba(255,255,255,0.12);color:#e0e7ff;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:999px;margin:0 6px 6px 0">${esc(reason.text)}</span>`,
     )
     .join('');
+
+  const dimensionRows = [
+    ['Financial', underwriting.financial.score],
+    ['Asset', underwriting.asset.score],
+    ['Financing', underwriting.financing.score],
+    ['Wealth', underwriting.wealth.score],
+    ['Margin', underwriting.margin.marginPct === null ? null : `${underwriting.margin.marginPct >= 0 ? '+' : ''}${underwriting.margin.marginPct.toFixed(1)}%`],
+  ].map(([label, value]) => `
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.12)">
+      <span style="font-size:10px;color:#c7d2fe">${label}</span>
+      <strong style="font-size:11px;color:#fff">${typeof value === 'number' ? `${value}/100` : value ?? 'n/a'}</strong>
+    </div>`).join('');
 
   const when = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const sub = [
@@ -177,26 +188,14 @@ function buildReport(apartment: Apartment, loan: LoanParams, r: Results, p: Proj
               <div style="font-size:13px;color:#c7d2fe;margin-top:9px">${sub}</div>
               <div style="display:inline-flex;align-items:center;gap:10px;margin-top:16px;background:${v.pill};padding:9px 16px 9px 12px;border-radius:999px;box-shadow:0 10px 22px rgba(0,0,0,0.25)">
                 <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.25);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">${v.mark}</span>
-                <span style="font-size:15px;font-weight:800;color:#fff;letter-spacing:.02em">${esc(r.verdict.label.toUpperCase())}</span>
+                <span style="font-size:15px;font-weight:800;color:#fff;letter-spacing:.02em">${recommendation}</span>
               </div>
               <div style="margin-top:14px">${reasons}</div>
             </div>
 
-            <div style="position:relative;width:150px;height:150px;flex-shrink:0">
-              <svg width="150" height="150" viewBox="0 0 150 150">
-                <defs>
-                  <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stop-color="${v.g0}"/><stop offset="1" stop-color="${v.g1}"/>
-                  </linearGradient>
-                </defs>
-                <circle cx="75" cy="75" r="${R}" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="14"/>
-                <circle cx="75" cy="75" r="${R}" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round"
-                  stroke-dasharray="${prog.toFixed(1)} ${circ.toFixed(1)}" transform="rotate(-90 75 75)"/>
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                <div style="font-size:44px;font-weight:800;line-height:1;color:#fff">${score}</div>
-                <div style="font-size:11px;color:#a5b4fc;margin-top:3px;letter-spacing:.1em">SCORE / 100</div>
-              </div>
+            <div style="width:168px;flex-shrink:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:11px 13px">
+              <div style="font-size:9px;font-weight:800;letter-spacing:.1em;color:#a5b4fc;margin-bottom:4px">UNDERWRITING</div>
+              ${dimensionRows}
             </div>
           </div>
 
@@ -271,10 +270,11 @@ function buildReport(apartment: Apartment, loan: LoanParams, r: Results, p: Proj
 export async function exportApartmentPdf(
   apartment: Apartment,
   loan: LoanParams,
+  costs: CostSettings,
   r: Results,
   p: Projection,
 ): Promise<void> {
-  const el = buildReport(apartment, loan, r, p);
+  const el = buildReport(apartment, loan, costs, r, p);
   document.body.appendChild(el);
   try {
     const canvas = await html2canvas(el, {

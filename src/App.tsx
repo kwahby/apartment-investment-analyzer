@@ -4,10 +4,11 @@ import { useStore } from './state/useStore';
 import { computeResults } from './lib/finance';
 import { computeProjection } from './lib/projection';
 import { computeScenarios } from './lib/scenarios';
+import { calculateUnderwriting } from './lib/underwriting';
 import { InputForm } from './components/InputForm';
 import { SimpleSummary } from './components/SimpleSummary';
 import { FinancingExplainer } from './components/FinancingExplainer';
-import { VerdictBanner } from './components/VerdictBanner';
+import { UnderwritingDashboard } from './components/UnderwritingDashboard';
 import { ResultsPanel } from './components/ResultsPanel';
 import { FinancingRiskPanel } from './components/FinancingRiskPanel';
 import { CashFlowBreakdown } from './components/CashFlowBreakdown';
@@ -79,6 +80,11 @@ function App() {
   const projection = useMemo(
     () => computeProjection(apartment, costs, results, store.projection),
     [apartment, costs, results, store.projection],
+  );
+
+  const underwriting = useMemo(
+    () => calculateUnderwriting({ apartment, loan, costs, results, projection }),
+    [apartment, loan, costs, results, projection],
   );
 
   const scenarios = useMemo(
@@ -188,7 +194,7 @@ function App() {
             onClick={async () => {
               try {
                 const { exportApartmentPdf } = await import('./lib/exportPdf');
-                await exportApartmentPdf(apartment, loan, results, projection);
+                await exportApartmentPdf(apartment, loan, costs, results, projection);
               } catch (err) {
                 console.error('PDF export failed', err);
               }
@@ -218,6 +224,8 @@ function App() {
         </p>
       </div>
 
+      <UnderwritingDashboard underwriting={underwriting} />
+
       <div className="layout">
         <div className="col col-input">
           <InputForm
@@ -231,8 +239,6 @@ function App() {
         </div>
 
         <div className="col col-results">
-          <VerdictBanner verdict={results.verdict} />
-
           <nav className="tabs" role="tablist" aria-label="Analysis sections">
             {TABS.map((t) => (
               <button

@@ -277,7 +277,7 @@ export function InputForm({ apartment, setApartment, loan, setLoan, costs, resul
             step={1}
             min={0}
             max={10}
-            hint="Your subjective rating of the location (1 = poor, 10 = prime). Feeds into the overall verdict."
+            hint="Your subjective rating of the location (1 = poor, 10 = prime). Feeds into Asset Attractiveness."
           />
         </div>
       </section>

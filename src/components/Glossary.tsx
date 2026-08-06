@@ -112,7 +112,7 @@ const TIPS: Tip[] = [
   },
   {
     term: 'Market benchmark (€/m² & location score)',
-    text: 'The app compares this listing\'s price and rent per m² against a local area average, so you can see if it is priced above or below market. Look it up by postal code or city to auto-fill the averages (approximate reference data — verify locally), or type your own. The location score (0–10) is your subjective take on the spot and feeds the overall verdict.',
+    text: 'The app compares this listing\'s price and rent per m² against a local area average, so you can see if it is priced above or below market. Look it up by postal code or city to auto-fill the averages (approximate reference data — verify locally), or type your own. The location score (0–10) feeds the independent Asset Attractiveness dimension.',
   },
   {
     term: 'Scenarios (Cautious / Base / Optimistic)',

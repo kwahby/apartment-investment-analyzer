@@ -310,9 +310,6 @@
     padding-left: 16px;
     padding-right: 16px;
   }
-  .verdict {
-    padding: 18px 18px;
-  }
   .card {
     padding: 14px 14px;
   }
@@ -381,10 +378,21 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow-x: auto;
-  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #a5b4fc transparent;
+  -webkit-overflow-scrolling: touch;
 }
 .tabs::-webkit-scrollbar {
-  display: none;
+  height: 5px;
+}
+.tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tabs::-webkit-scrollbar-thumb {
+  background: #a5b4fc;
+  border-radius: 999px;
 }
 .tab {
   flex: 1 0 auto;
@@ -398,6 +406,7 @@
   cursor: pointer;
   white-space: nowrap;
   position: relative;
+  scroll-snap-align: start;
   transition: background 0.15s ease, color 0.15s ease;
 }
 .tab:hover {
@@ -656,61 +665,208 @@
   accent-color: var(--brand);
 }
 
-/* ---------- verdict ---------- */
-.verdict {
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
+/* ---------- underwriting dashboard ---------- */
+.underwriting-dashboard {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 0 0 8px;
+  align-items: start;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #a5b4fc transparent;
+  -webkit-overflow-scrolling: touch;
   animation: rise 0.4s ease;
 }
-.verdict::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(500px 160px at 100% 0%, rgba(255, 255, 255, 0.5), transparent 70%);
-  pointer-events: none;
+.underwriting-card {
+  min-width: 0;
+  min-height: 168px;
+  padding: 15px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
 }
-.verdict-main {
+.underwriting-card:has(.infodot:hover),
+.underwriting-card:has(.infodot:focus-within) {
+  position: relative;
+  z-index: 70;
+}
+.underwriting-card-head {
+  min-height: 34px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  color: #334155;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.underwriting-score {
+  margin-top: 9px;
+  color: var(--ink);
+  font-size: 31px;
+  line-height: 1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.underwriting-score span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.underwriting-subtitle {
+  min-height: 45px;
+  margin: 7px 0 10px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.underwriting-details {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+}
+.underwriting-details > summary {
+  min-height: 32px;
+  padding: 7px 0 0;
   display: flex;
   align-items: center;
-  gap: 14px;
-}
-.verdict-label {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.verdict-score {
-  font-size: 14px;
+  justify-content: space-between;
+  gap: 8px;
+  color: #475569;
+  font-size: 10px;
   font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  list-style: none;
 }
-.verdict-reasons {
-  margin: 12px 0 0;
-  padding-left: 20px;
-  font-size: 13px;
-  line-height: 1.6;
+.underwriting-details > summary::-webkit-details-marker {
+  display: none;
 }
-.verdict-buy {
-  background: linear-gradient(120deg, var(--good-bg), #ecfdf5);
+.underwriting-details > summary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.underwriting-expand-icon {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #c7d2fe;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+.underwriting-details[open] .underwriting-expand-icon {
+  transform: rotate(45deg);
+  background: var(--brand-soft);
+}
+.underwriting-factors {
+  border-top: 1px solid var(--line);
+}
+.underwriting-factor {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 6px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+.underwriting-factor > span {
+  color: var(--muted);
+}
+.underwriting-factor > strong {
+  color: #334155;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.underwriting-factor > small {
+  grid-column: 1 / -1;
+  color: #94a3b8;
+  font-size: 9px;
+}
+.underwriting-unavailable {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+.underwriting-thesis {
+  border-top: 3px solid var(--warn);
+}
+.underwriting-thesis.thesis-buy { border-top-color: var(--good); }
+.underwriting-thesis.thesis-pass { border-top-color: var(--bad); }
+.underwriting-recommendation {
+  width: fit-content;
+  margin-top: 9px;
+  padding: 6px 9px;
+  border: 1px solid var(--warn-line);
+  border-radius: 6px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 900;
+}
+.underwriting-recommendation > span {
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.thesis-buy .underwriting-recommendation {
   border-color: var(--good-line);
-  color: #065f46;
+  background: var(--good-bg);
+  color: var(--good);
 }
-.verdict-caution {
-  background: linear-gradient(120deg, var(--warn-bg), #fffbeb);
-  border-color: var(--warn-line);
-  color: #92400e;
-}
-.verdict-avoid {
-  background: linear-gradient(120deg, var(--bad-bg), #fff1f2);
+.thesis-pass .underwriting-recommendation {
   border-color: var(--bad-line);
-  color: #9f1239;
+  background: var(--bad-bg);
+  color: var(--bad);
 }
+.underwriting-reasons {
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.underwriting-reasons li {
+  position: relative;
+  padding: 7px 0 7px 15px;
+  border-bottom: 1px solid var(--line);
+  color: #334155;
+  font-size: 10px;
+  line-height: 1.25;
+}
+.underwriting-reasons li::before {
+  position: absolute;
+  left: 0;
+  font-weight: 900;
+}
+.underwriting-reasons .reason-positive::before { content: '+'; color: var(--good); }
+.underwriting-reasons .reason-negative::before { content: '−'; color: var(--bad); }
+.underwriting-reasons .reason-neutral::before { content: '·'; color: var(--muted); }
+.underwriting-score.margin-positive { color: var(--good); }
+.underwriting-score.margin-negative { color: var(--bad); }
+.underwriting-score.margin-neutral { color: var(--muted); }
 
 /* ---------- metrics ---------- */
 .metric-grid {
@@ -1515,6 +1671,14 @@
   border: 6px solid transparent;
   border-top-color: #0f172a;
 }
+.infodot-popup-portal {
+  position: fixed;
+  bottom: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 10000;
+}
 .infodot:hover .infodot-popup,
 .infodot:focus .infodot-popup,
 .infodot:focus-within .infodot-popup {
@@ -1538,6 +1702,16 @@
   .infodot:focus .infodot-popup,
   .infodot:focus-within .infodot-popup {
     transform: translateY(0);
+  }
+  .infodot-popup.infodot-popup-portal {
+    right: auto;
+    bottom: auto;
+    width: max-content;
+    max-width: min(260px, calc(100vw - 24px));
+    transform: translateX(-50%) translateY(-100%);
+  }
+  .infodot-popup.infodot-popup-portal::after {
+    display: block;
   }
 }
 

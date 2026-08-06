@@ -19,7 +19,7 @@ const BASE = import.meta.env.BASE_URL;
 const SLIDES: Slide[] = [
   {
     src: `${BASE}screenshots/01-summary.png`,
-    title: 'Instant Buy / Caution / Avoid verdict',
+    title: 'Institutional-style underwriting dashboard',
     gradient: 'lp-g-indigo',
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
@@ -251,8 +251,8 @@ export function Landing({ onLaunch }: LandingProps) {
           </div>
 
           <div className="lp-grid lp-grid-3">
-            <Feature grad="lp-g-indigo" title="Instant verdict"
-              body="A Buy / Caution / Avoid score from yield, cash flow, price vs. the local market and location.">
+            <Feature grad="lp-g-indigo" title="Investment thesis"
+              body="A rules-based Buy / Negotiate / Pass recommendation backed by five independent underwriting dimensions.">
               <path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" />
             </Feature>
             <Feature grad="lp-g-green" title="Cash-flow clarity"
